@@ -17,12 +17,16 @@ export function JokeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Load jokes and ratings from localStorage
+    /*
     const storedJokes = localStorage.getItem("jokes")
     if (storedJokes) {
       setJokes(JSON.parse(storedJokes))
     } else {
       setJokes(mockJokes)
     }
+    */
+   setJokes(mockJokes)
+   console.log(jokes)
   }, [])
 
   useEffect(() => {

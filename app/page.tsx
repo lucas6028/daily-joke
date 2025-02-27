@@ -19,7 +19,6 @@ export default function Home() {
       const seed = hashCode(dateString)
       const index = Math.abs(seed % jokes.length)
       setJokeOfTheDay(jokes[index])
-      console.log(jokes[index])
     }
   }, [jokes])
 
