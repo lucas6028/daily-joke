@@ -29,7 +29,7 @@ export default function Favorites() {
           transition={{ delay: 0.3, duration: 0.5 }}
           className="text-center p-8"
         >
-          <p className="text-muted-foreground">You haven't added any favorites yet.</p>
+          <p className="text-muted-foreground">You haven&#39;t added any favorites yet.</p>
           <p className="mt-2">Rate jokes and heart them to add to your favorites!</p>
         </motion.div>
       ) : (
