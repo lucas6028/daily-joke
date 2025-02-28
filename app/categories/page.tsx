@@ -11,7 +11,7 @@ export default function Categories() {
   const { jokes } = useJokeContext()
 
   // Extract unique categories and count jokes in each
-  const categories = [...new Set(jokes.map((joke) => joke.category))]
+  const categories = Array.from(new Set(jokes.map((joke) => joke.category)))
   const categoryCounts = categories.reduce(
     (acc, category) => {
       acc[category] = jokes.filter((joke) => joke.category === category).length
