@@ -23,7 +23,7 @@ export default function RandomJoke() {
 
   return (
     <div className="page-transition space-y-10">
-      <section className="">
+      <section>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
