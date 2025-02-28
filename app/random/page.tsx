@@ -23,12 +23,12 @@ export default function RandomJoke() {
 
   return (
     <div className="page-transition space-y-10">
-      <section className="text-center">
+      <section className="">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
-          className="space-y-4"
+          className="space-y-4 text-center"
         >
           <h1 className="text-3xl font-bold tracking-tight">Random Joke</h1>
           <p className="text-muted-foreground">Click the button for a new random joke!</p>
