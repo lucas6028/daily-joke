@@ -31,7 +31,9 @@ export default function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container max-w-4xl mx-auto flex h-14 items-center justify-between">
         <div className="flex items-center gap-2 font-semibold">
-          <span className="text-2xl">😂</span>
+          <span className="text-2xl">
+            <img src="/favicon.png" alt="daily-joke logo" width="30" height="30" className="inline-block" />
+          </span>
           <span className="hidden sm:inline-block">Daily Joke Hub</span>
         </div>
 
