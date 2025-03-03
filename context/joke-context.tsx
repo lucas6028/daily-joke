@@ -83,5 +83,3 @@ export function useJokeContext() {
   return context
 }
 
-export const dynamic = "force-dynamic"
-

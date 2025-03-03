@@ -9,6 +9,8 @@ import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ["latin"] })
 
+export const dynamic = "force-static"
+
 export const metadata: Metadata = {
   title: "Daily Joke Hub",
   description: "Get your daily dose of laughter with our joke collection",
