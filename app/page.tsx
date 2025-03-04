@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useJokeContext } from "@/context/joke-context"
 import type { Joke } from "@/types/joke"
 import JokeCard from "@/components/joke-card"
 import { Sparkles } from "lucide-react"
@@ -27,7 +26,7 @@ export default function Home() {
   const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   const seed = hashCode(dateString)
   const index = Math.abs(seed % 20) + 1
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ''
 
   useEffect(() => {
     if (jokes)
@@ -35,7 +34,6 @@ export default function Home() {
 
     const fetchJokes = async () => {
       try {
-
         // Fetch todays joke
         const res = await fetch(`${baseUrl}/api/supabase/fetch-jokes?limit=${1}&id=${index}`)
         const jokesFromDB = await res.json()
@@ -54,6 +52,7 @@ export default function Home() {
 
     const fetchRatings = async () => {
       try {
+        // Fetch ratings of today joke
         const res = await fetch(`${baseUrl}/api/supabase/fetch-ratings?id=${index}`)
         const ratings = await res.json()
         setJokeOfTheDay( {...jokes, ratings: ratings} )
