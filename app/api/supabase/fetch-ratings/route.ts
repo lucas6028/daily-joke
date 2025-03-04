@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const {data: ratings, error } = await supabase
-      .from('ratings')
+      .from('mock_ratings')
       .select('*')
       .eq('joke_id', id)
 

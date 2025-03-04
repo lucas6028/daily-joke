@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
 
   try {
     const {data: jokes, error } = await supabase
-      .from('jokes')
+      .from('mock_jokes')
       .select()
       .eq('id', id)
       .limit(limit)
