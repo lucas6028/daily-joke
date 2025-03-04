@@ -7,7 +7,7 @@ import { Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function Home() {
-  const [jokes, setJokes] = useState<Joke | null>()
+  const [jokes, setJokes] = useState<Joke | null>(null)
   const [jokeOfTheDay, setJokeOfTheDay] = useState<Joke | null>(null)
 
   // Simple hash function for consistent random selection based on date
