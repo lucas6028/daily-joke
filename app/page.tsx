@@ -91,7 +91,7 @@ export default function Home() {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
+            transition={{ delay: 0.01, duration: 0.5 }}
           >
             <JokeCard joke={jokeOfTheDay} />
           </motion.div>
