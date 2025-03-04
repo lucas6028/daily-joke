@@ -49,7 +49,7 @@ export default function Home() {
     }
 
     fetchJokes()
-  }, [])
+  }, [baseUrl])
 
   // Get joke of the day based on current date
   useEffect(() => {
@@ -67,7 +67,7 @@ export default function Home() {
     } 
 
     fetchRatings()
-  }, [jokes])
+  }, [jokes, baseUrl])
 
   return (
     <div className="page-transition space-y-10">
