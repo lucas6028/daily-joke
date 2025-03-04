@@ -27,6 +27,7 @@ export default function Home() {
   const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   const seed = hashCode(dateString)
   const index = Math.abs(seed % 20) + 1
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
 
   useEffect(() => {
     if (jokes)
@@ -36,7 +37,7 @@ export default function Home() {
       try {
 
         // Fetch todays joke
-        const res = await fetch(`http://localhost:3000/api/supabase/fetch-jokes?limit=${1}&id=${index}`)
+        const res = await fetch(`${baseUrl}/api/supabase/fetch-jokes?limit=${1}&id=${index}`)
         const jokesFromDB = await res.json()
         setJokes({...jokesFromDB, ratings: []})
       } catch (err) {
@@ -53,7 +54,7 @@ export default function Home() {
 
     const fetchRatings = async () => {
       try {
-        const res = await fetch(`http://localhost:3000/api/supabase/fetch-ratings?id=${index}`)
+        const res = await fetch(`${baseUrl}/api/supabase/fetch-ratings?id=${index}`)
         const ratings = await res.json()
         setJokeOfTheDay( {...jokes, ratings: ratings} )
       } catch (err) {
