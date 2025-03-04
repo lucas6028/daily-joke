@@ -7,7 +7,7 @@ import { Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function Home() {
-  const [jokes, setJokes] = useState()
+  const [jokes, setJokes] = useState<Joke | null>()
   const [jokeOfTheDay, setJokeOfTheDay] = useState<Joke | null>(null)
 
   // Simple hash function for consistent random selection based on date
@@ -26,18 +26,23 @@ export default function Home() {
   const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   const seed = hashCode(dateString)
   const index = Math.abs(seed % 20) + 1
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ''
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ""
 
   useEffect(() => {
-    if (jokes)
-      return
+    if (jokes) return
 
     const fetchJokes = async () => {
       try {
         // Fetch todays joke
         const res = await fetch(`${baseUrl}/api/supabase/fetch-jokes?limit=${1}&id=${index}`)
         const jokesFromDB = await res.json()
-        setJokes({...jokesFromDB, ratings: []})
+        if (Array.isArray(jokesFromDB) && jokesFromDB.length > 0) {
+          setJokes({ ...jokesFromDB[0], ratings: [] })
+        } else if (jokesFromDB && typeof jokesFromDB === "object") {
+          setJokes({ ...jokesFromDB, ratings: [] })
+        } else {
+          console.error("Unexpected API response:", jokesFromDB)
+        }
       } catch (err) {
         console.error(err)
       }
@@ -55,7 +60,7 @@ export default function Home() {
         // Fetch ratings of today joke
         const res = await fetch(`${baseUrl}/api/supabase/fetch-ratings?id=${index}`)
         const ratings = await res.json()
-        setJokeOfTheDay( {...jokes, ratings: ratings} )
+        setJokeOfTheDay({ ...jokes, ratings: Array.isArray(ratings) ? ratings : [] })
       } catch (err) {
         console.error(err)
       }
