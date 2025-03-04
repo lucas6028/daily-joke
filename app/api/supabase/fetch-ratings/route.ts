@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const id = parseInt(searchParams.get('id') || 1, 10)
+  const id = parseInt(searchParams.get('id') || '1', 10)
 
   try {
     const {data: ratings, error } = await supabase
