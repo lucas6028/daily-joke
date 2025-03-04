@@ -34,7 +34,7 @@ export default function Home() {
     const fetchJokes = async () => {
       try {
         // Fetch todays joke
-        const res = await fetch(`${baseUrl}/api/supabase/fetch-jokes?limit=${1}&id=${index}`)
+        const res = await fetch(`${baseUrl}/api/supabase/fetch-jokes?limit=${1}&id=${index}`, { next: { revalidate: 3600 } })
         const jokesFromDB = await res.json()
         if (Array.isArray(jokesFromDB) && jokesFromDB.length > 0) {
           setJokes({ ...jokesFromDB[0], ratings: [] })
@@ -58,7 +58,7 @@ export default function Home() {
     const fetchRatings = async () => {
       try {
         // Fetch ratings of today joke
-        const res = await fetch(`${baseUrl}/api/supabase/fetch-ratings?id=${index}`)
+        const res = await fetch(`${baseUrl}/api/supabase/fetch-ratings?id=${index}`, { next: { revalidate: 3600 } })
         const ratings = await res.json()
         setJokeOfTheDay({ ...jokes, ratings: Array.isArray(ratings) ? ratings : [] })
       } catch (err) {
