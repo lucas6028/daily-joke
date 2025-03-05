@@ -67,7 +67,7 @@ export default function JokeCard({ joke }: JokeCardProps) {
             </Badge>
             <div className="text-xs text-muted-foreground">ID: {joke.id}</div>
           </div>
-          <p className="text-lg leading-relaxed mb-4">{joke.text}</p>
+          <pre className="text-lg leading-relaxed mb-4">{joke.text}</pre>
           <div className="flex items-center justify-between">
             <Rating initialRating={joke.averageRating} onRate={handleRate} />
             <span className="text-sm text-muted-foreground">
