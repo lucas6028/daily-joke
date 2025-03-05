@@ -25,6 +25,9 @@ export default function CategoryPage({ params }: { params: { category: string } 
     music: "🎵",
     sports: "⚽",
     office: "🏢",
+    dirty: "🥵",
+    absurd: "😑",
+    misunderstanding: "😵‍💫"
   }
 
   useEffect(() => {

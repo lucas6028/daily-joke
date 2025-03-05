@@ -32,6 +32,9 @@ export default function Categories() {
     music: "🎵",
     sports: "⚽",
     office: "🏢",
+    dirty: "🥵",
+    absurd: "😑",
+    misunderstanding: "😵‍💫"
   }
 
   return (
