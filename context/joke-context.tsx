@@ -18,7 +18,7 @@ export function JokeProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const fetchJokesWithRatings = async () => {
       const { data: jokesFromDb, error: jokesError } = await supabase
-        .from("mock_jokes")
+        .from("jokes")
         .select();
       if (jokesError) {
         console.error("Error fetching jokes:", jokesError.message);
@@ -28,7 +28,7 @@ export function JokeProvider({ children }: { children: ReactNode }) {
       const jokesWithRatings = await Promise.all(
         jokesFromDb.map(async (joke) => {
           const { data: ratingsData, error: ratingsError } = await supabase
-            .from("mock_ratings")
+            .from("ratings")
             .select("rating")
             .eq("joke_id", joke.id);
           if (ratingsError) {

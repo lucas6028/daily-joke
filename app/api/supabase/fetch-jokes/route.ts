@@ -5,10 +5,11 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const limit = parseInt(searchParams.get('limit') || '1', 10)
   const id = parseInt(searchParams.get('id') || '1', 10)
+  console.log('id:', id)
 
   try {
     const {data: jokes, error } = await supabase
-      .from('mock_jokes')
+      .from('jokes')
       .select()
       .eq('id', id)
       .limit(limit)
