@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   const id = parseInt(searchParams.get('id') || '1', 10)
 
   try {
-    const {data: jokes, error } = await supabase
+    const { data: jokes, error } = await supabase
       .from('jokes')
       .select()
       .eq('id', id)
