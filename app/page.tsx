@@ -25,7 +25,7 @@ export default function Home() {
   const date = new Date()
   const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   const seed = hashCode(dateString)
-  const index = Math.abs(seed % 11) + 1
+  const index = Math.abs(seed % 13) + 1
 
   useEffect(() => {
     if (jokes) return
