@@ -26,7 +26,6 @@ export default function Home() {
   const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
   const seed = hashCode(dateString)
   const index = Math.abs(seed % 11) + 1
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || ""
 
   useEffect(() => {
     if (jokes) return
