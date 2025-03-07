@@ -52,7 +52,7 @@ export function JokeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     // Save jokes and ratings to localStorage whenever they change
-    localStorage.setItem("jokes", JSON.stringify(jokes))
+    // localStorage.setItem("jokes", JSON.stringify(jokes))
   }, [jokes])
 
   const getRandomJoke = () => {
@@ -72,6 +72,18 @@ export function JokeProvider({ children }: { children: ReactNode }) {
           : joke,
       ),
     )
+    fetch('/api/supabase/insert-ratings', {
+      method: 'POST',
+      body: JSON.stringify({ joke_id: id, rating: rating }),
+      header: { "Content-Type": "application/json" }
+    })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to insert rating")
+        console.log("Rating insert successfully!")
+      })
+      .catch((err) => {
+        console.error("Error inserting new rating,", err)
+      })
   }
 
   return <JokeContext.Provider value={{ jokes, getRandomJoke, rateJoke }}>{children}</JokeContext.Provider>
