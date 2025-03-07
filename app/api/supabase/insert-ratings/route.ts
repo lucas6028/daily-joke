@@ -7,15 +7,13 @@ export async function POST(request: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 
-  const searchParams = request.nextUrl.searchParams;
-  const joke_id = parseInt(searchParams.get('joke_id') || '0', 10)
-  const new_rating = parseInt(searchParams.get('rating') || '5', 10)
+  const { joke_id, rating }= await request.json()
 
   try {
-    console.log('insert new rating, joke_id:', joke_id, ', new rating:', new_rating)
+    console.log('insert new rating, joke_id:', joke_id, ', new rating:', rating)
     const { error } = await supabase
       .from('ratings')
-      .insert({ rating: new_rating, joke_id: joke_id })
+      .insert({ rating: rating, joke_id: joke_id })
 
     if (error) {
       console.error('Error while insert new rating from supabase', error)
