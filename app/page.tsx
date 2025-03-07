@@ -5,30 +5,16 @@ import type { Joke } from "@/types/joke"
 import JokeCard from "@/components/joke-card"
 import { Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
+import { getHashIndex } from "@/lib/getHashIndex"
 
 export default function Home() {
   const [jokes, setJokes] = useState<Joke | null>(null)
   const [jokeOfTheDay, setJokeOfTheDay] = useState<Joke | null>(null)
 
-  // Simple hash function for consistent random selection based on date
-  const hashCode = (str: string) => {
-    let hash = 0
-    for (let i = 0; i < str.length; i++) {
-      const char = str.charCodeAt(i)
-      hash = (hash << 5) - hash + char
-      hash = hash | 0 // Convert to 32bit integer
-    }
-    return hash
-  }
-
-  // Get the hash index of today
-  const date = new Date()
-  const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-  const seed = hashCode(dateString)
-  const index = Math.abs(seed % 13) + 1
-
   useEffect(() => {
     if (jokes) return
+
+    const index = getHashIndex()
 
     const fetchJokes = async () => {
       try {
@@ -56,6 +42,8 @@ export default function Home() {
 
     const fetchRatings = async () => {
       try {
+        const index = getHashIndex()
+
         // Fetch ratings of today joke
         const res = await fetch(`/api/supabase/fetch-ratings?id=${index}`, { next: { revalidate: 3600 } })
         const ratings = await res.json()
