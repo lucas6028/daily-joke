@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useJokeContext } from "@/context/joke-context"
 import JokeCard from "@/components/joke-card"
 import { Button } from "@/components/ui/button"
@@ -8,11 +8,14 @@ import { RefreshCw } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function RandomJoke() {
-  const { getRandomJoke } = useJokeContext()
-  const [randomJoke, setRandomJoke] = useState(getRandomJoke())
+  const { jokes } = useJokeContext()
+  const [jokeId, setJokeId] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
 
   const handleGetRandomJoke = () => {
+    const newId = Math.floor(Math.random() * jokes.length)
+    setJokeId(jokeId)
+
     setIsLoading(true)
     // Simulate loading
     setTimeout(() => {
@@ -38,15 +41,15 @@ export default function RandomJoke() {
           </Button>
         </motion.div>
 
-        {randomJoke && (
+        {jokes[jokeId]&& (
           <motion.div
-            key={randomJoke.id}
+            key={jokeId}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="mt-6"
           >
-            <JokeCard joke={randomJoke} />
+            <JokeCard joke={jokes[jokeId]} />
           </motion.div>
         )}
       </section>
