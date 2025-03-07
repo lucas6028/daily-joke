@@ -50,14 +50,16 @@ export function JokeProvider({ children }: { children: ReactNode }) {
     fetchJokesWithRatings();
   }, []);
 
+  /*
   useEffect(() => {
     // Save jokes and ratings to localStorage whenever they change
     // localStorage.setItem("jokes", JSON.stringify(jokes))
   }, [jokes])
+  */
 
   const getRandomJoke = () => {
     const randomIndex = Math.floor(Math.random() * jokes.length)
-    return jokes[randomIndex]
+    return jokes[randomIndex].id
   }
 
   const rateJoke = (id: string, rating: number) => {
