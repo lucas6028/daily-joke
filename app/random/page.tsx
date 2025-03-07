@@ -8,13 +8,13 @@ import { RefreshCw } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function RandomJoke() {
-  const { jokes } = useJokeContext()
-  const [jokeId, setJokeId] = useState(getRandomId())
-  const [isLoading, setIsLoading] = useState(false)
-
   const getRandomId = () => {
     return Math.floor(Math.random() * jokes.length)
   }
+
+  const { jokes } = useJokeContext()
+  const [jokeId, setJokeId] = useState(getRandomId())
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleGetRandomJoke = () => {
     setIsLoading(true)
