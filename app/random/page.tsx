@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { useJokeContext } from "@/context/joke-context"
 import JokeCard from "@/components/joke-card"
 import { Button } from "@/components/ui/button"
@@ -14,12 +14,12 @@ export default function RandomJoke() {
 
   const handleGetRandomJoke = () => {
     const newId = Math.floor(Math.random() * jokes.length)
-    setJokeId(jokeId)
+    setJokeId(newId)
 
     setIsLoading(true)
     // Simulate loading
     setTimeout(() => {
-      setRandomJoke(getRandomJoke())
+      //setRandomJoke(getRandomJoke())
       setIsLoading(false)
     }, 500)
   }
