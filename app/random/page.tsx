@@ -9,17 +9,18 @@ import { motion } from "framer-motion"
 
 export default function RandomJoke() {
   const { jokes } = useJokeContext()
-  const [jokeId, setJokeId] = useState(0)
+  const [jokeId, setJokeId] = useState(getRandomId())
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleGetRandomJoke = () => {
-    const newId = Math.floor(Math.random() * jokes.length)
-    setJokeId(newId)
+  const getRandomId = () => {
+    return Math.floor(Math.random() * jokes.length)
+  }
 
+  const handleGetRandomJoke = () => {
     setIsLoading(true)
     // Simulate loading
     setTimeout(() => {
-      //setRandomJoke(getRandomJoke())
+      setJokeId(getRandomId())
       setIsLoading(false)
     }, 500)
   }
