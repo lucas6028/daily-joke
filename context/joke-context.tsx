@@ -59,7 +59,7 @@ export function JokeProvider({ children }: { children: ReactNode }) {
 
   const getRandomJoke = () => {
     const randomIndex = Math.floor(Math.random() * jokes.length)
-    return jokes[randomIndex].id
+    return jokes[randomIndex]
   }
 
   const rateJoke = (id: string, rating: number) => {
