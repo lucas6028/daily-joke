@@ -4,15 +4,15 @@ Daily Joke Hub is a web application that provides a daily dose of laughter with 
 
 ## Preview
 
-### Home
+### Home 🏠
 
 ![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/preview/home.png)
 
-### Random
+### Random 🔀
 
 ![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/preview/random.png)
 
-### Catogory
+### Catogory 📃
 
 ![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/preview/categories.png)
 
