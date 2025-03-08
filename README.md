@@ -14,7 +14,7 @@ Daily Joke Hub is a web application that provides a daily dose of laughter with 
 1. Clone the repository:
 
 ```sh
-git clone https://github.com/your-username/daily-joke.git
+git clone https://github.com/lucas6028/daily-joke.git
 cd daily-joke
 ```
 
