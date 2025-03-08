@@ -8,19 +8,21 @@ import { RefreshCw } from "lucide-react"
 import { motion } from "framer-motion"
 
 export default function RandomJoke() {
-  const getRandomId = () => {
-    return Math.floor(Math.random() * jokes.length)
+  const getRandomId = (prev: number): number => {
+    if (jokes.length <= 1) return 0
+    const index = Math.floor(Math.random() * (jokes.length - 1))
+    return index >= prev ? index + 1 : index
   }
 
   const { jokes } = useJokeContext()
-  const [jokeId, setJokeId] = useState(getRandomId())
+  const [jokeId, setJokeId] = useState(getRandomId(-1))
   const [isLoading, setIsLoading] = useState(false)
 
   const handleGetRandomJoke = () => {
     setIsLoading(true)
     // Simulate loading
     setTimeout(() => {
-      setJokeId(getRandomId())
+      setJokeId(getRandomId(jokeId))
       setIsLoading(false)
     }, 500)
   }
@@ -42,7 +44,7 @@ export default function RandomJoke() {
           </Button>
         </motion.div>
 
-        {jokes[jokeId]&& (
+        {jokes[jokeId] && (
           <motion.div
             key={jokeId}
             initial={{ opacity: 0, y: 20 }}
