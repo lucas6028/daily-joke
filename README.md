@@ -1,24 +1,88 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Daily Joke Hub
 
-## Getting Started
+Daily Joke Hub is a web application that provides a daily dose of laughter with a collection of jokes. Users can browse jokes by categories, view a random joke, and rate jokes.
 
-First, run the development server:
+## Get Started
 
-```bash
+### Prerequisites
+
+- Node.js (v14 or later)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+
+```sh
+git clone https://github.com/your-username/daily-joke.git
+cd daily-joke
+```
+
+2. Install dependencies
+
+```sh
+npm install
+# or
+yarn install
+```
+
+3. Create a `.env.local` file in the root directory and add your Supabase credentials:
+
+```
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+```
+
+### Running the Development Server
+
+Start the development server:
+
+```sh
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000` with your browswer to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build the Production Server
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To build the project for production, run:
+
+```sh
+npm run build
+# or
+yarn build
+```
+
+### Starting the Production Server
+
+After building the project, you can start the production server:
+
+```sh
+npm start
+# or
+yarn start
+```
+
+## Project Structure
+
+- `app`: Contains the main application components and pages.
+- `components`: Contains reusable UI components.
+- `context`: Contains React context for managing global state.
+- `data`: Contains mock data for jokes.
+- `hooks`: Contains custom React hooks.
+- `lib`: Contains utility functions and Supabase client setup.
+- `public`: Contains static assets.
+- `styles/`: Contains global CSS styles.
+- `types`: Contains TypeScript type definitions.
+
+## API Routes
+
+- `GET /api/supabase/fetch-jokes`: Fetches jokes from the Supabase database.
+- `POST /api/supabase/insert-ratings`: Inserts a new rating for a joke.
+- `GET /api/supabase/fetch-ratings`: Fetches ratings for a specific joke.
 
 ## Learn More
 
@@ -27,10 +91,14 @@ To learn more about Next.js, take a look at the following resources:
 - [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
 ## Deploy on Vercel
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Check out the [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+License
+
+---
+
+Happy coding! 😄
