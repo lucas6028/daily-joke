@@ -33,7 +33,9 @@ export default function Header() {
       <div className="container max-w-4xl mx-auto flex h-14 items-center justify-between">
         <div className="flex items-center gap-2 font-semibold">
           <span className="text-2xl">
-            <Image src="/favicon.png" alt="daily-joke logo" width={30} height={30} className="inline-block" />
+            <Link key="home" href="/">
+              <Image src="/favicon.png" alt="daily-joke logo" width={30} height={30} className="inline-block" />
+            </Link>
           </span>
           <span className="hidden sm:inline-block">Daily Joke Hub</span>
         </div>
