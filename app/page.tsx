@@ -34,7 +34,7 @@ export default function Home() {
     }
 
     fetchJokes()
-  }, [])
+  }, [jokes])
 
   // Get joke of the day based on current date
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function Home() {
       } catch (err) {
         console.error(err)
       }
-    } 
+    }
 
     fetchRatings()
   }, [jokes])
