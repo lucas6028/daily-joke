@@ -2,6 +2,20 @@
 
 Daily Joke Hub is a web application that provides a daily dose of laughter with a collection of jokes. Users can browse jokes by categories, view a random joke, and rate jokes.
 
+## Preview
+
+### Home
+
+![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/previw/home.png)
+
+### Random
+
+![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/previw/random.png)
+
+### Catogory
+
+![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/previw/categories.png)
+
 ## Get Started
 
 ### Prerequisites
