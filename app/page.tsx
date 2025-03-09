@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type { Joke } from "@/types/joke"
+import type { Rating } from "@/types/Rating"
 import JokeCard from "@/components/joke-card"
 import { Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
@@ -62,7 +63,7 @@ export default function Home() {
           //cache: 'no-store'
         })
         const result = await data.json()
-        const ratings = result.map((rating: number) => rating.rating)
+        const ratings = result.map((rating: Rating) => rating.rating)
         setJokeOfTheDay({
           ...jokes,
           ratings: Array.isArray(ratings) ? ratings : [],
