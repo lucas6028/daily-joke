@@ -11,6 +11,16 @@ export default function Home() {
   const [jokes, setJokes] = useState<Joke | null>(null)
   const [jokeOfTheDay, setJokeOfTheDay] = useState<Joke | null>(null)
 
+  const refreshRatings = async (newRating: number) => {
+    if (!jokeOfTheDay) return;
+
+    setJokeOfTheDay({
+      ...jokeOfTheDay,
+      ratings: [...jokeOfTheDay.ratings, newRating],
+      averageRating: (jokeOfTheDay.ratings.reduce((a, b) => a + b, 0) + newRating) / (jokeOfTheDay.ratings.length + 1),
+    })
+  }
+
   useEffect(() => {
     if (jokes) return
 
@@ -19,7 +29,9 @@ export default function Home() {
     const fetchJokes = async () => {
       try {
         // Fetch todays joke
-        const res = await fetch(`/api/supabase/fetch-jokes?limit=${1}&id=${index}`, { next: { revalidate: 3600 } })
+        const res = await fetch(`/api/supabase/fetch-jokes?limit=${1}&id=${index}`, {
+          next: { revalidate: 3600 }
+        })
         const jokesFromDB = await res.json()
         if (Array.isArray(jokesFromDB) && jokesFromDB.length > 0) {
           setJokes({ ...jokesFromDB[0], ratings: [] })
@@ -45,9 +57,17 @@ export default function Home() {
         const index = getHashIndex()
 
         // Fetch ratings of today joke
-        const res = await fetch(`/api/supabase/fetch-ratings?id=${index}`, { next: { revalidate: 3600 } })
-        const ratings = await res.json()
-        setJokeOfTheDay({ ...jokes, ratings: Array.isArray(ratings) ? ratings : [] })
+        const data = await fetch(`/api/supabase/fetch-ratings?id=${index}`, {
+          next: { revalidate: 3600 },
+          //cache: 'no-store'
+        })
+        const result = await data.json()
+        const ratings = result.map((rating) => rating.rating)
+        setJokeOfTheDay({
+          ...jokes,
+          ratings: Array.isArray(ratings) ? ratings : [],
+          averageRating: ratings.reduce((a, b) => a + b) / ratings.length,
+        })
       } catch (err) {
         console.error(err)
       }
@@ -80,7 +100,7 @@ export default function Home() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.01, duration: 0.5 }}
           >
-            <JokeCard joke={jokeOfTheDay} />
+            <JokeCard joke={jokeOfTheDay} onRatingSubmitted={refreshRatings} />
           </motion.div>
         )}
       </section>
