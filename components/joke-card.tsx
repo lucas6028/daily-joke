@@ -15,7 +15,7 @@ interface JokeCardProps {
   joke: Joke
 }
 
-export default function JokeCard({ joke }: JokeCardProps) {
+export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
   const [copied, setCopied] = useState(false)
   const { rateJoke } = useJokeContext()
 
@@ -55,6 +55,10 @@ export default function JokeCard({ joke }: JokeCardProps) {
       title: "Thanks for rating!",
       description: `You rated this joke ${rating} out of 10.`,
     })
+
+    if (onRatingSubmitted) {
+      onRatingSubmitted(rating)
+    }
   }
 
   return (
