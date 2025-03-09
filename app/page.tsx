@@ -62,7 +62,7 @@ export default function Home() {
           //cache: 'no-store'
         })
         const result = await data.json()
-        const ratings = result.map((rating) => rating.rating)
+        const ratings = result.map((rating: number) => rating.rating)
         setJokeOfTheDay({
           ...jokes,
           ratings: Array.isArray(ratings) ? ratings : [],
