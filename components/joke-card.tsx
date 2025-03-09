@@ -13,6 +13,7 @@ import { useJokeContext } from "@/context/joke-context"
 
 interface JokeCardProps {
   joke: Joke
+  onRatingSubmitted?: (rating: number) => void
 }
 
 export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
@@ -72,7 +73,7 @@ export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
             <div className="text-xs text-muted-foreground">ID: {joke.id}</div>
           </div>
           <pre className="text-lg leading-relaxed mb-4 whitespace-pre-wrap break-words">
-          {joke.text}
+            {joke.text}
           </pre>
           <div className="flex items-center justify-between">
             <Rating initialRating={joke.averageRating} onRate={handleRate} />
