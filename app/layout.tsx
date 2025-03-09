@@ -6,6 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 import Header from "@/components/header"
 import { JokeProvider } from "@/context/joke-context"
 import { Toaster } from "@/components/ui/toaster"
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -41,6 +42,7 @@ export default function RootLayout({
             <Toaster />
           </JokeProvider>
         </ThemeProvider>
+        <GoogleAnalytics gaId="G-Z9JQ13JX7T" />
       </body>
     </html>
   )
