@@ -37,7 +37,7 @@ export default function Header() {
               <Image src="/favicon.png" alt="daily-joke logo" width={30} height={30} className="inline-block" />
             </Link>
           </span>
-          <span className="hidden sm:inline-block">Daily Joke Hub</span>
+          <span className="hidden sm:inline-block">Daily Joke</span>
         </div>
 
         <nav className="flex items-center gap-2">

@@ -1,6 +1,6 @@
-# Daily Joke Hub 😄
+# Daily Joke 😄
 
-Daily Joke Hub is a web application that provides a daily dose of laughter with a collection of jokes. Users can browse jokes by categories, view a random joke, and rate jokes.
+Daily Joke is a web application that provides a daily dose of laughter with a collection of jokes. Users can browse jokes by categories, view a random joke, and rate jokes.
 
 ## Preview
 
