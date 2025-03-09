@@ -7,7 +7,11 @@ export async function POST(request: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
   )
 
-  const { joke_id, rating }= await request.json()
+  const { joke_id, rating } = await request.json()
+
+  if (rating < 0 || rating > 10) {
+    return NextResponse.json({ message: 'Invalid rating value' }, { status: 400 })
+  }
 
   try {
     console.log('insert new rating, joke_id:', joke_id, ', new rating:', rating)
