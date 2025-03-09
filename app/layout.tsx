@@ -26,6 +26,15 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.png" type="image/png" sizes="any"/>
+        {/* Open Graph meta tags */}
+        <meta property="og:title" content="Daily Joke" />
+        <meta
+          property="og:description"
+          content="Joke of the Day. Start your day with a laugh!"
+        />
+        <meta property="og:image" content="/large_icon.jepg" />
+        <meta property="og:url" content="https://daily-joke.vercel.app" />
+        <meta property="og:type" content="website" />
       </head>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
