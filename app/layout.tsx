@@ -32,7 +32,7 @@ export default function RootLayout({
           property="og:description"
           content="Joke of the Day. Start your day with a laugh!"
         />
-        <meta property="og:image" content="/large_icon.jpeg" />
+        <meta property="og:image" content="/large_title.jpeg" />
         <meta property="og:url" content="https://daily-joke.vercel.app" />
         <meta property="og:type" content="website" />
       </head>
