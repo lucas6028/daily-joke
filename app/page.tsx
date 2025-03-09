@@ -67,7 +67,7 @@ export default function Home() {
         setJokeOfTheDay({
           ...jokes,
           ratings: Array.isArray(ratings) ? ratings : [],
-          averageRating: ratings.reduce((a, b) => a + b) / ratings.length,
+          averageRating: ratings.reduce((a: number, b: number) => a + b) / ratings.length,
         })
       } catch (err) {
         console.error(err)
