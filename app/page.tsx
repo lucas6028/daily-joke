@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import type { Joke } from "@/types/joke"
-import type { Rating } from "@/types/Rating"
+import type { Rating } from "@/types/rating"
 import JokeCard from "@/components/joke-card"
 import { Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
