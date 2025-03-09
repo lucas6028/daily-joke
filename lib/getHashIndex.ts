@@ -15,7 +15,7 @@ export function getHashIndex() {
     date.getMonth() + 1
   }-${date.getDate()}`;
   const seed = hashCode(dateString);
-  const index = Math.abs(seed % 20) + 1;
+  const index = Math.abs(seed % 31) + 1;
 
   return index;
 }
