@@ -37,7 +37,7 @@ export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
       navigator
         .share({
           title: "Check out this joke!",
-          text: joke.text,
+          text: joke.text + "\n",
           url: window.location.href,
         })
         .catch(console.error)
