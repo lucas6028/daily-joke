@@ -2,6 +2,11 @@
 
 import webpush from 'web-push'
 
+// Utility function to convert ArrayBuffer to base64
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  return Buffer.from(buffer).toString('base64')
+}
+
 // Define the custom PushSubscription type expected by web-push
 interface WebPushSubscription {
   endpoint: string
@@ -20,14 +25,22 @@ webpush.setVapidDetails(
 let subscription: WebPushSubscription | null = null
 
 export async function subscribeUser(sub: PushSubscription) {
-  // Cast the subscription to the correct type
+  const p256dh = sub.getKey('p256dh')
+  const auth = sub.getKey('auth')
+
+  if (!p256dh || !auth) {
+    throw new Error('Invalid subscription: missing p256dh or auth keys')
+  }
+
+  // Convert ArrayBuffer to base64 strings
   subscription = {
     endpoint: sub.endpoint,
     keys: {
-      p256dh: sub.getKey('p256dh') as string,
-      auth: sub.getKey('auth') as string,
+      p256dh: arrayBufferToBase64(p256dh),
+      auth: arrayBufferToBase64(auth),
     },
   }
+
   // In a production environment, you would want to store the subscription in a database
   // For example: await db.subscriptions.create({ data: subscription })
   return { success: true }
