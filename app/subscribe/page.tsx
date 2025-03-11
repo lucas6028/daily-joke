@@ -135,8 +135,10 @@ function InstallPrompt() {
 export default function Page() {
   return (
     <div>
+    {/*
       <PushNotificationManager />
       <InstallPrompt />
+      */}
     </div>
   )
 }
