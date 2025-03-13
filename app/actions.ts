@@ -1,11 +1,13 @@
 "use server";
 
 import webpush from "web-push";
+import { createClient } from "@supabase/supabase-js";
 
-// Utility function to convert ArrayBuffer to base64
-// function arrayBufferToBase64(buffer: ArrayBuffer): string {
-//   return Buffer.from(buffer).toString("base64");
-// }
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
 // Define the custom PushSubscription type expected by web-push
 interface WebPushSubscription {
@@ -30,10 +32,6 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY || ""
 );
 
-// Instead of using an in-memory variable, we'll use an object to simulate storage
-// In a real app, you'd use a database instead
-let subscriptionStore: Record<string, WebPushSubscription> = {};
-
 export async function subscribeUser(sub: WebPushSubscription) {
   try {
     // Handle the serialized subscription from the client
@@ -45,42 +43,98 @@ export async function subscribeUser(sub: WebPushSubscription) {
       },
     };
 
-    // Store using endpoint as a key
-    const subId = Buffer.from(subscription.endpoint).toString("base64");
-    subscriptionStore[subId] = subscription;
+    // Store in Supabase
+    const { data, error } = await supabase
+      .from("push_subscriptions")
+      .upsert(
+        {
+          endpoint: subscription.endpoint,
+          p256dh: subscription.keys.p256dh,
+          auth: subscription.keys.auth,
+        },
+        {
+          onConflict: "endpoint",
+          ignoreDuplicates: false,
+        }
+      )
+      .select();
 
-    // In production, store in a database instead
-    return { success: true, subId };
+    if (error) {
+      console.error("Error storing subscription in database:", error);
+      return { success: false, error: "Failed to store subscription" };
+    }
+
+    return { success: true, subId: data?.[0]?.id };
   } catch (error) {
     console.error("Error during subscription:", error);
     return { success: false, error: "Failed to process subscription" };
   }
 }
 
-export async function unsubscribeUser() {
-  // Clear all subscriptions for simplicity
-  subscriptionStore = {};
-  return { success: true };
+export async function unsubscribeUser(endpoint: string) {
+  try {
+    const { error } = await supabase
+      .from("push_subscriptions")
+      .delete()
+      .eq("endpoint", endpoint);
+
+    if (error) {
+      console.error("Error removing subscription from database:", error);
+      return { success: false, error: "Failed to remove subscription" };
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error during unsubscribe:", error);
+    return { success: false, error: "Failed to process unsubscribe request" };
+  }
 }
 
 export async function sendNotification(message: string) {
   try {
-    // If no subscriptions, return early
-    const subscriptions = Object.values(subscriptionStore);
-    if (subscriptions.length === 0) {
+    // Fetch all subscriptions from Supabase
+    const { data: subscriptionsData, error } = await supabase
+      .from("push_subscriptions")
+      .select("endpoint, p256dh, auth");
+
+    if (error) {
+      console.error("Error fetching subscriptions:", error);
+      return { success: false, error: "Failed to fetch subscriptions" };
+    }
+
+    if (!subscriptionsData || subscriptionsData.length === 0) {
       return { success: false, error: "No subscriptions available" };
     }
 
-    // Send to all stored subscriptions (in this example just one)
-    for (const subscription of subscriptions) {
-      await webpush.sendNotification(
-        subscription,
-        JSON.stringify({
-          title: "Test Notification",
-          body: message,
-          icon: "/icon-background.jpeg",
-        })
-      );
+    // Convert Supabase records to WebPushSubscription format
+    const subscriptions: WebPushSubscription[] = subscriptionsData.map(
+      (sub) => ({
+        endpoint: sub.endpoint,
+        keys: {
+          p256dh: sub.p256dh,
+          auth: sub.auth,
+        },
+      })
+    );
+
+    // Send notifications to all subscriptions
+    const results = await Promise.allSettled(
+      subscriptions.map((subscription) =>
+        webpush.sendNotification(
+          subscription,
+          JSON.stringify({
+            title: "Test Notification",
+            body: message,
+            icon: "/icon-background.jpeg",
+          })
+        )
+      )
+    );
+
+    // Check if any notifications were sent successfully
+    const anySuccess = results.some((result) => result.status === "fulfilled");
+    if (!anySuccess) {
+      return { success: false, error: "Failed to send any notifications" };
     }
 
     return { success: true };
