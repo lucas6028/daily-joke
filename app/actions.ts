@@ -125,7 +125,7 @@ export async function sendNotification(message: string) {
           JSON.stringify({
             title: "Test Notification",
             body: message,
-            icon: "/icon-background.jpeg",
+            icon: "/icon-512x512.png",
           })
         )
       )

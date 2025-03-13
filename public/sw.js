@@ -2,8 +2,8 @@ const CACHE_NAME = "daily-joke-v1";
 const urlsToCache = [
   "/",
   "/favicon.png",
-  "/icon-background.jpeg",
-  "/icon-background-large.jpeg",
+  "/icon-192x192.png",
+  "/icon-512x512.png",
 ];
 
 // Install event - cache assets
@@ -68,7 +68,7 @@ self.addEventListener("push", function (event) {
     const data = event.data.json();
     const options = {
       body: data.body,
-      icon: data.icon || "/icon-background.jpeg",
+      icon: data.icon || "/icon-192x192.png",
       badge: "/large_icon.jpeg",
       vibrate: [100, 50, 100],
       data: {
