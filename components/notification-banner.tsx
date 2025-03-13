@@ -28,26 +28,63 @@ export function NotificationBanner() {
     const [hasSubscription, setHasSubscription] = useState(false);
     const { isMobile, isStandalone, isIOS } = useDeviceDetect();
 
+    // Correctly detect PWA standalone mode
+    useEffect(() => {
+        // Check if the window object is available (client-side)
+        if (typeof window !== 'undefined') {
+            // Define an interface for iOS Navigator
+            interface iOSNavigator extends Navigator {
+                standalone?: boolean;
+            }
+
+            // This is a more reliable way to detect standalone mode on iOS
+            const isInStandaloneMode =
+                window.matchMedia('(display-mode: standalone)').matches ||
+                (window.navigator as iOSNavigator).standalone === true;
+
+            // Force update if in standalone mode but not detected
+            if (isInStandaloneMode && !isStandalone) {
+                // We can't directly update isStandalone since it comes from a hook,
+                // but we can update our visibility logic
+                localStorage.setItem("is-standalone-mode", "true");
+            }
+        }
+    }, [isStandalone]);
+
     useEffect(() => {
         const checkNotificationStatus = async () => {
+            // Only run on client side
+            if (typeof window === 'undefined') return;
+
             // Check if user has already dismissed the banner
             const dismissed = localStorage.getItem("notification-banner-dismissed");
 
+            // Get our manual standalone mode detection
+            const manualStandaloneMode = localStorage.getItem("is-standalone-mode") === "true";
+            const effectiveStandalone = isStandalone || manualStandaloneMode;
+
             // Check if notifications are already subscribed
             if ("serviceWorker" in navigator) {
-                const registration = await navigator.serviceWorker.ready;
-                const subscription = await registration.pushManager.getSubscription();
-                setHasSubscription(!!subscription);
+                try {
+                    const registration = await navigator.serviceWorker.ready;
+                    const subscription = await registration.pushManager.getSubscription();
+                    setHasSubscription(!!subscription);
+                } catch (error) {
+                    console.error("Error checking subscription status:", error);
+                }
             }
 
-            // Show banner if not dismissed and not already subscribed
+            // Show banner logic:
+            // 1. Not dismissed previously AND
+            // 2. Not already subscribed AND
+            // 3. Either in standalone mode OR on mobile
             if (!dismissed && !hasSubscription) {
-                // For standalone mode, we can show directly for push notification setup
-                if (isStandalone) {
+                // For standalone mode (PWA), show notification prompt directly
+                if (effectiveStandalone) {
                     setIsVisible(true);
                 }
-                // For mobile web, we'll show with a delay
-                else if (isMobile) {
+                // For mobile web (iOS Safari included), show with delay
+                else if (isMobile || isIOS) { // Explicitly include isIOS check
                     const timer = setTimeout(() => {
                         setIsVisible(true);
                     }, 3000);
@@ -58,7 +95,7 @@ export function NotificationBanner() {
         };
 
         checkNotificationStatus();
-    }, [isMobile, isStandalone, hasSubscription]);
+    }, [isMobile, isStandalone, hasSubscription, isIOS]); // Add isIOS to dependencies
 
     const handleDismiss = () => {
         setIsVisible(false);
@@ -66,8 +103,13 @@ export function NotificationBanner() {
     };
 
     const handleSubscribe = async () => {
-        if (isIOS) {
+        // Get our manual standalone mode detection
+        const manualStandaloneMode = localStorage.getItem("is-standalone-mode") === "true";
+        const effectiveStandalone = isStandalone || manualStandaloneMode;
+
+        if (isIOS && !effectiveStandalone) {
             // iOS doesn't support web push notifications, show installation instructions
+            // but only if not already installed as PWA
             setShowIOSInstructions(true);
         } else {
             // For other platforms, attempt to subscribe to push notifications
@@ -99,9 +141,6 @@ export function NotificationBanner() {
                             ),
                         });
 
-                        // Store subscription in state
-                        // setSubscription(sub)
-
                         // Get serialized subscription
                         const serializedSub = JSON.parse(JSON.stringify(sub));
 
@@ -130,6 +169,12 @@ export function NotificationBanner() {
 
     if (!isVisible) return null;
 
+    // Get our manual standalone mode detection for rendering
+    const manualStandaloneMode =
+        typeof window !== 'undefined' &&
+        localStorage.getItem("is-standalone-mode") === "true";
+    const effectiveStandalone = isStandalone || manualStandaloneMode;
+
     return (
         <AnimatePresence>
             <motion.div
@@ -155,7 +200,7 @@ export function NotificationBanner() {
                             </Button>
                         </div>
 
-                        {showIOSInstructions ? (
+                        {showIOSInstructions && !effectiveStandalone ? (
                             <div className="space-y-3">
                                 <p className="text-sm">
                                     iOS doesn&apos;t support web notifications. Install our app to
@@ -181,7 +226,7 @@ export function NotificationBanner() {
                         ) : (
                             <div className="space-y-3">
                                 <p className="text-sm">
-                                    {isStandalone
+                                    {effectiveStandalone
                                         ? "Enable notifications to receive a new joke every day!"
                                         : "Subscribe to receive a new joke every day directly to your device!"}
                                 </p>
@@ -190,7 +235,7 @@ export function NotificationBanner() {
                                         Not now
                                     </Button>
                                     <Button size="sm" onClick={handleSubscribe}>
-                                        {isStandalone ? "Enable notifications" : "Subscribe"}
+                                        {effectiveStandalone ? "Enable notifications" : "Subscribe"}
                                     </Button>
                                 </div>
                             </div>

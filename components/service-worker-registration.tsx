@@ -5,19 +5,17 @@ import { useEffect } from "react";
 export function ServiceWorkerRegistration() {
   useEffect(() => {
     if ("serviceWorker" in navigator) {
-      window.addEventListener("load", () => {
-        navigator.serviceWorker.register("/sw.js", { scope: "/" }).then(
-          (registration) => {
-            console.log(
-              "ServiceWorker registration successful with scope: ",
-              registration.scope
-            );
-          },
-          (err) => {
-            console.log("ServiceWorker registration failed: ", err);
-          }
-        );
-      });
+      navigator.serviceWorker
+        .register("/sw.js", {
+          scope: "/",
+          updateViaCache: "none", // Don't use cached version
+        })
+        .then((registration) => {
+          console.log("Service Worker registered with scope:", registration.scope);
+        })
+        .catch((error) => {
+          console.error("Service Worker registration failed:", error);
+        });
     }
   }, []);
 
