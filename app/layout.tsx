@@ -7,6 +7,8 @@ import Header from "@/components/header"
 import { JokeProvider } from "@/context/joke-context"
 import { Toaster } from "@/components/ui/toaster"
 import { GoogleAnalytics } from '@next/third-parties/google'
+import { NotificationBanner } from "@/components/notification-banner"
+import { ServiceWorkerRegistration } from "@/components/service-worker-registration"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -25,7 +27,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.png" type="image/png" sizes="any"/>
+        <link rel="icon" href="/favicon.png" type="image/png" sizes="any" />
         {/* Open Graph meta tags */}
         <meta property="og:title" content="Daily Joke" />
         <meta
@@ -48,7 +50,9 @@ export default function RootLayout({
                 </div>
               </footer>
             </div>
+            <NotificationBanner />
             <Toaster />
+            <ServiceWorkerRegistration />
           </JokeProvider>
         </ThemeProvider>
         <GoogleAnalytics gaId="G-Z9JQ13JX7T" />
