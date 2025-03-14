@@ -124,6 +124,7 @@ export function NotificationBanner() {
               description: "You'll now receive daily joke notifications.",
             });
             setIsVisible(false);
+            localStorage.setItem("notification-banner-dismissed", "true");
 
             // Register service worker
             const registration = await navigator.serviceWorker.ready;
