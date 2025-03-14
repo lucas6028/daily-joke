@@ -28,6 +28,8 @@ export default function manifest(): MetadataRoute.Manifest {
         sizes: "any",
         type: "image/svg+xml",
       },
+    ],
+    screenshots: [
       {
         src: "/desktop_screenshot.png",
         sizes: "1852x922",
@@ -40,6 +42,6 @@ export default function manifest(): MetadataRoute.Manifest {
         type: "image/png",
         form_factor: "narrow",
       }
-    ],
+    ]
   };
 }
