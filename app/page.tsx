@@ -1,160 +1,111 @@
-'use client'
+"use client"
 
-import { useState, useEffect } from 'react'
-import { subscribeUser, unsubscribeUser, sendNotification } from './actions'
+import { useEffect, useState } from "react"
+import type { Joke } from "@/types/joke"
+import type { Rating } from "@/types/rating"
+import JokeCard from "@/components/joke-card"
+import { Sparkles } from "lucide-react"
+import { motion } from "framer-motion"
+import { getHashIndex } from "@/lib/getHashIndex"
 
-function urlBase64ToUint8Array(base64String: string) {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+export default function Home() {
+  const [jokes, setJokes] = useState<Joke | null>(null)
+  const [jokeOfTheDay, setJokeOfTheDay] = useState<Joke | null>(null)
 
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
+  const refreshRatings = async (newRating: number) => {
+    if (!jokeOfTheDay) return;
 
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i)
+    setJokeOfTheDay({
+      ...jokeOfTheDay,
+      ratings: [...jokeOfTheDay.ratings, newRating],
+      averageRating: (jokeOfTheDay.ratings.reduce((a, b) => a + b, 0) + newRating) / (jokeOfTheDay.ratings.length + 1),
+    })
   }
-  return outputArray
-}
-
-function PushNotificationManager() {
-  const [isSupported, setIsSupported] = useState(false)
-  const [subscription, setSubscription] = useState<PushSubscription | null>(
-    null
-  )
-  const [message, setMessage] = useState('')
 
   useEffect(() => {
-    if ('serviceWorker' in navigator && 'PushManager' in window) {
-      setIsSupported(true)
-      registerServiceWorker()
-    }
-  }, [])
+    if (jokes) return
 
-  async function registerServiceWorker() {
-    const registration = await navigator.serviceWorker.register('/sw.js', {
-      scope: '/',
-      updateViaCache: 'none',
-    })
-    const sub = await registration.pushManager.getSubscription()
-    setSubscription(sub)
-  }
+    const index = getHashIndex()
 
-  // Update just the subscribeToPush function
-  async function subscribeToPush() {
-    const registration = await navigator.serviceWorker.ready
-
-    // Check if VAPID key exists
-    if (!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY) {
-      console.error('VAPID public key is not defined');
-      alert('Push notification configuration is missing. Please contact support.');
-      return;
+    const fetchJokes = async () => {
+      try {
+        // Fetch todays joke
+        const res = await fetch(`/api/supabase/fetch-jokes?limit=${1}&id=${index}`, {
+          next: { revalidate: 3600 }
+        })
+        const jokesFromDB = await res.json()
+        if (Array.isArray(jokesFromDB) && jokesFromDB.length > 0) {
+          setJokes({ ...jokesFromDB[0], ratings: [] })
+        } else if (jokesFromDB && typeof jokesFromDB === "object") {
+          setJokes({ ...jokesFromDB, ratings: [] })
+        } else {
+          console.error("Unexpected API response:", jokesFromDB)
+        }
+      } catch (err) {
+        console.error(err)
+      }
     }
 
-    const sub = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(
-        process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
-      ),
-    })
+    fetchJokes()
+  }, [jokes])
 
-    // Store subscription in state
-    setSubscription(sub)
-
-    // Get serialized subscription
-    const serializedSub = JSON.parse(JSON.stringify(sub))
-
-    // Pass to server action
-    await subscribeUser(serializedSub)
-  }
-
-  async function unsubscribeFromPush() {
-    if (subscription) {
-      const endpoint = subscription.endpoint;
-      await subscription.unsubscribe();
-      setSubscription(null);
-      await unsubscribeUser(endpoint);
-    }
-  }
-
-  async function sendTestNotification() {
-    if (subscription) {
-      await sendNotification(message)
-      setMessage('')
-    }
-  }
-
-  if (!isSupported) {
-    return <p>Push notifications are not supported in this browser.</p>
-  }
-
-  return (
-    <div>
-      <h3>Push Notifications</h3>
-      {subscription ? (
-        <>
-          <p>You are subscribed to push notifications.</p>
-          <button onClick={unsubscribeFromPush}>Unsubscribe</button>
-          <input
-            type="text"
-            placeholder="Enter notification message"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
-          <button onClick={sendTestNotification}>Send Test</button>
-        </>
-      ) : (
-        <>
-          <p>You are not subscribed to push notifications.</p>
-          <button onClick={subscribeToPush}>Subscribe</button>
-        </>
-      )}
-    </div>
-  )
-}
-
-function InstallPrompt() {
-  const [isIOS, setIsIOS] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(false)
-
+  // Get joke of the day based on current date
   useEffect(() => {
-    setIsIOS(
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream
-    )
+    if (!jokes) return
 
-    setIsStandalone(window.matchMedia('(display-mode: standalone)').matches)
-  }, [])
+    const fetchRatings = async () => {
+      try {
+        const index = getHashIndex()
 
-  if (isStandalone) {
-    return null // Don't show install button if already installed
-  }
+        // Fetch ratings of today joke
+        const data = await fetch(`/api/supabase/fetch-ratings?id=${index}`, {
+          next: { revalidate: 3600 },
+          //cache: 'no-store'
+        })
+        const result = await data.json()
+        const ratings = result.map((rating: Rating) => rating.rating)
+        setJokeOfTheDay({
+          ...jokes,
+          ratings: Array.isArray(ratings) ? ratings : [],
+          averageRating: ratings.reduce((a: number, b: number) => a + b) / ratings.length,
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    }
+
+    fetchRatings()
+  }, [jokes])
 
   return (
-    <div>
-      <h3>Install App</h3>
-      <button>Add to Home Screen</button>
-      {isIOS && (
-        <p>
-          To install this app on your iOS device, tap the share button
-          <span role="img" aria-label="share icon">
-            {' '}
-            ⎋{' '}
-          </span>
-          and then &quotaAdd to Home Screen&quota
-          <span role="img" aria-label="plus icon">
-            {' '}
-            ➕{' '}
-          </span>.
-        </p>
-      )}
+    <div className="page-transition space-y-10">
+      <section>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center space-y-2 mb-6"
+        >
+          <h1 className="text-3xl font-bold tracking-tight">
+            <span className="inline-block">
+              <Sparkles className="h-8 w-8 inline-block mr-2 text-primary" />
+            </span>
+            Joke of the Day
+          </h1>
+          <p className="text-muted-foreground">Start your day with a laugh!</p>
+        </motion.div>
+
+        {jokeOfTheDay && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.01, duration: 0.5 }}
+          >
+            <JokeCard joke={jokeOfTheDay} onRatingSubmitted={refreshRatings} />
+          </motion.div>
+        )}
+      </section>
     </div>
   )
 }
 
-export default function Page() {
-  return (
-    <div>
-      <PushNotificationManager />
-      <InstallPrompt />
-    </div>
-  )
-}
