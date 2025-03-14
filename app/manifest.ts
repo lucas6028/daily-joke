@@ -34,14 +34,12 @@ export default function manifest(): MetadataRoute.Manifest {
         src: "/desktop_screenshot.png",
         sizes: "1852x922",
         type: "image/png",
-        form_factor: "wide",
       },
       {
         src: "/mobile_screenshot.png",
         sizes: "1017x2048",
         type: "image/png",
-        form_factor: "narrow",
-      }
-    ]
+      },
+    ],
   };
 }
