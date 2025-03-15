@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { verifyToken } from "@/lib/csrf";
+import { verifyCSRFToken } from "@/lib/csrf";
 
 export async function POST(request: NextRequest) {
   const supabase = createClient(
@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     process.env.SUPABASE_SERVICE_ROLE_KEY!
   );
   const csrfToken = request.headers.get("X-CSRF-Token");
-  if (!csrfToken || !verifyToken(csrfToken)) {
+  if (!csrfToken || !verifyCSRFToken(csrfToken)) {
     return NextResponse.json(
       { message: "Invalid CSRF token" },
       { status: 401 }
