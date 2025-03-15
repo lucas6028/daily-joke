@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import type { Joke } from "@/types/joke"
 import { supabase } from "@/lib/supabase"
+import { generateCSRFToken } from "@/lib/csrf"
 
 interface JokeContextType {
   jokes: Joke[]
@@ -14,6 +15,7 @@ const JokeContext = createContext<JokeContextType | undefined>(undefined)
 
 export function JokeProvider({ children }: { children: ReactNode }) {
   const [jokes, setJokes] = useState<Joke[]>([])
+  const csrfToken = generateCSRFToken()
 
   useEffect(() => {
     const fetchJokesWithRatings = async () => {
@@ -76,8 +78,11 @@ export function JokeProvider({ children }: { children: ReactNode }) {
     )
     fetch('/api/supabase/insert-ratings', {
       method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": csrfToken,
+      },
       body: JSON.stringify({ joke_id: id, rating: rating }),
-      headers: { "Content-Type": "application/json" }
     })
       .then((response) => {
         if (!response.ok) throw new Error("Failed to insert rating")
