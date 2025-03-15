@@ -74,10 +74,13 @@ export function JokeProvider({ children }: { children: ReactNode }) {
           : joke,
       ),
     )
-    fetch('/api/supabase/insert-ratings', {
+
+    fetch('/api/supabase/ratings', {
       method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({ joke_id: id, rating: rating }),
-      headers: { "Content-Type": "application/json" }
     })
       .then((response) => {
         if (!response.ok) throw new Error("Failed to insert rating")
