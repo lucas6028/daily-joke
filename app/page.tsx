@@ -30,7 +30,7 @@ export default function Home() {
     const fetchJokes = async () => {
       try {
         // Fetch todays joke
-        const res = await fetch(`/api/supabase/jokes?limit=${1}&id=${index}`, {
+        const res = await fetch(`/api/joke?limit=${1}&id=${index}`, {
           next: { revalidate: 3600 }
         })
         const jokesFromDB = await res.json()
@@ -58,7 +58,7 @@ export default function Home() {
         const index = getHashIndex()
 
         // Fetch ratings of today joke
-        const data = await fetch(`/api/supabase/ratings?id=${index}`, {
+        const data = await fetch(`/api/rating?id=${index}`, {
           next: { revalidate: 3600 },
           //cache: 'no-store'
         })
