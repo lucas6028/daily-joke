@@ -30,7 +30,7 @@ export default function Home() {
     const fetchJokes = async () => {
       try {
         // Fetch todays joke
-        const res = await fetch(`/api/joke?limit=${1}&id=${index}`, {
+        const res = await fetch(`/api/joke/single?&id=${index}`, {
           next: { revalidate: 3600 }
         })
         const jokesFromDB = await res.json()
