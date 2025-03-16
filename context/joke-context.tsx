@@ -31,7 +31,7 @@ export function JokeProvider({ children }: { children: ReactNode }) {
         return
       }
 
-      const jokesWithAverageRatings = jokesWithRatings.map(joke => ({
+      const jokesWithAverageRatings = jokesWithRatings.map((joke: Joke) => ({
         ...joke,
         averageRating: joke.ratings.length > 0
           ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / joke.ratings.length
