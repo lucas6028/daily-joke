@@ -8,13 +8,13 @@ const redis = Redis.fromEnv();
 // Create rate limiter instances for different routes/actions
 export const apiRateLimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(10, "60s"),
+  limiter: Ratelimit.slidingWindow(10, "60s"), // 10 requests per minute
   analytics: true,
 });
 
 export const loginRateLimit = new Ratelimit({
   redis,
-  limiter: Ratelimit.slidingWindow(5, "60s"),
+  limiter: Ratelimit.slidingWindow(5, "60s"), // 5 requests per minute
   analytics: true,
   prefix: "login",
 });
