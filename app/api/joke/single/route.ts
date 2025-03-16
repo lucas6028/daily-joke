@@ -12,7 +12,12 @@ export async function GET(request: NextRequest) {
   try {
     const { data: jokes, error } = await supabase
       .from("jokes")
-      .select()
+      .select(
+        `
+        *,
+        ratings:ratings(*)
+        `
+      )
       .eq("id", id)
       .limit(1)
       .single();
