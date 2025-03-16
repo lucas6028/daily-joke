@@ -9,21 +9,26 @@ import { motion } from "framer-motion"
 import { getHashIndex } from "@/lib/getHashIndex"
 
 export default function Home() {
-  const [jokes, setJokes] = useState<Joke | null>(null)
+  // const [jokes, setJokes] = useState<Joke | null>(null)
   const [jokeOfTheDay, setJokeOfTheDay] = useState<Joke | null>(null)
 
-  const refreshRatings = async (newRating: number) => {
+  const refreshRatings = async (rating: number) => {
     if (!jokeOfTheDay) return;
+
+    const newRating = {
+      rating,
+      joke_id: jokeOfTheDay.id,
+    }
 
     setJokeOfTheDay({
       ...jokeOfTheDay,
       ratings: [...jokeOfTheDay.ratings, newRating],
-      averageRating: (jokeOfTheDay.ratings.reduce((a, b) => a + b, 0) + newRating) / (jokeOfTheDay.ratings.length + 1),
+      averageRating: (jokeOfTheDay.ratings.reduce((prev, curr) => prev + curr.rating, 0) + rating) / (jokeOfTheDay.ratings.length + 1),
     })
   }
 
   useEffect(() => {
-    if (jokes) return
+    if (jokeOfTheDay) return;
 
     const index = getHashIndex()
 
@@ -33,49 +38,23 @@ export default function Home() {
         const res = await fetch(`/api/joke/single?&id=${index}`, {
           next: { revalidate: 3600 }
         })
+
         const jokesFromDB = await res.json()
-        if (Array.isArray(jokesFromDB) && jokesFromDB.length > 0) {
-          setJokes({ ...jokesFromDB[0], ratings: [] })
-        } else if (jokesFromDB && typeof jokesFromDB === "object") {
-          setJokes({ ...jokesFromDB, ratings: [] })
-        } else {
-          console.error("Unexpected API response:", jokesFromDB)
-        }
+        const jokesWithAverageRatings = {
+          ...jokesFromDB,
+          averageRating: jokesFromDB.ratings.length > 0
+            ? jokesFromDB.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / jokesFromDB.ratings.length
+            : 0
+        };
+
+        setJokeOfTheDay(jokesWithAverageRatings)
       } catch (err) {
         console.error(err)
       }
     }
 
     fetchJokes()
-  }, [jokes])
-
-  // Get joke of the day based on current date
-  useEffect(() => {
-    if (!jokes) return
-
-    const fetchRatings = async () => {
-      try {
-        const index = getHashIndex()
-
-        // Fetch ratings of today joke
-        const data = await fetch(`/api/rating?id=${index}`, {
-          next: { revalidate: 3600 },
-          //cache: 'no-store'
-        })
-        const result = await data.json()
-        const ratings = result.map((rating: Rating) => rating.rating)
-        setJokeOfTheDay({
-          ...jokes,
-          ratings: Array.isArray(ratings) ? ratings : [],
-          averageRating: ratings.reduce((a: number, b: number) => a + b) / ratings.length,
-        })
-      } catch (err) {
-        console.error(err)
-      }
-    }
-
-    fetchRatings()
-  }, [jokes])
+  }, [jokeOfTheDay])
 
   return (
     <div className="page-transition space-y-10">

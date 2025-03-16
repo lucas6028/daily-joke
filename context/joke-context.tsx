@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import type { Joke } from "@/types/joke"
+import type { Rating } from "@/types/rating"
 import { supabase } from "@/lib/supabase"
 
 interface JokeContextType {
@@ -17,45 +18,31 @@ export function JokeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const fetchJokesWithRatings = async () => {
-      const { data: jokesFromDb, error: jokesError } = await supabase
+      const { data: jokesWithRatings, error: jokesError } = await supabase
         .from("jokes")
-        .select();
+        .select(
+          `
+          *,
+          ratings:ratings(*)
+          `
+        )
       if (jokesError) {
-        console.error("Error fetching jokes:", jokesError.message);
-        return;
+        console.error("Error fetching jokes:", jokesError.message)
+        return
       }
 
-      const jokesWithRatings = await Promise.all(
-        jokesFromDb.map(async (joke) => {
-          const { data: ratingsData, error: ratingsError } = await supabase
-            .from("ratings")
-            .select("rating")
-            .eq("joke_id", joke.id);
-          if (ratingsError) {
-            console.error("Error fetching ratings for joke", joke.id, ":", ratingsError.message);
-            // Return the joke with empty ratings if an error occurs
-            return { ...joke, ratings: [] };
-          }
+      const jokesWithAverageRatings = jokesWithRatings.map((joke: Joke) => ({
+        ...joke,
+        averageRating: joke.ratings.length > 0
+          ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / joke.ratings.length
+          : 0
+      }));
 
-          const ratings = ratingsData.map((r: { rating: number }) => r.rating);
-          const averageRating = ratings.length > 0 ? ratings.reduce((a, b) => a + b, 0) / ratings.length : 0;
+      setJokes(jokesWithAverageRatings)
+    }
 
-          return { ...joke, ratings, averageRating };
-        })
-      );
-
-      setJokes(jokesWithRatings);
-    };
-
-    fetchJokesWithRatings();
-  }, []);
-
-  /*
-  useEffect(() => {
-    // Save jokes and ratings to localStorage whenever they change
-    // localStorage.setItem("jokes", JSON.stringify(jokes))
-  }, [jokes])
-  */
+    fetchJokesWithRatings()
+  }, [])
 
   const getRandomJoke = () => {
     const randomIndex = Math.floor(Math.random() * jokes.length)
@@ -63,13 +50,18 @@ export function JokeProvider({ children }: { children: ReactNode }) {
   }
 
   const rateJoke = (id: string, rating: number) => {
+    const newRating = {
+      rating,
+      joke_id: id,
+    }
+
     setJokes((prevJokes) =>
       prevJokes.map((joke) =>
         joke.id === id
           ? {
             ...joke,
-            ratings: [...joke.ratings, rating],
-            averageRating: (joke.ratings.reduce((a, b) => a + b, 0) + rating) / (joke.ratings.length + 1),
+            ratings: [...joke.ratings, newRating],
+            averageRating: (joke.ratings.reduce((prev, curr) => prev + curr.rating, 0) + rating) / (joke.ratings.length + 1),
           }
           : joke,
       ),
