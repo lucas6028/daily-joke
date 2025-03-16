@@ -75,7 +75,7 @@ export function JokeProvider({ children }: { children: ReactNode }) {
       ),
     )
 
-    fetch('/api/supabase/ratings', {
+    fetch('/api/rating', {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
