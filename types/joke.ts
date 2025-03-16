@@ -5,5 +5,5 @@ export interface Joke {
   text: string;
   category: string;
   ratings: Rating[];
-  averageRating?: number;
+  averageRating: number;
 }
