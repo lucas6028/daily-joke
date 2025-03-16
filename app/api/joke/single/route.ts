@@ -3,7 +3,11 @@ import { supabase } from "@/lib/supabase";
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
-  const id = parseInt(searchParams.get("id") || "1", 10);
+  const paramID = searchParams.get("id");
+  if (!paramID) {
+    return NextResponse.json({ message: "Invalid joke id", status: 400 });
+  }
+  const id = parseInt(paramID, 10);
 
   try {
     const { data: jokes, error } = await supabase
