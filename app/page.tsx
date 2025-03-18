@@ -7,6 +7,7 @@ import JokeCard from "@/components/joke-card"
 import { Sparkles } from "lucide-react"
 import { motion } from "framer-motion"
 import { getHashIndex } from "@/lib/getHashIndex"
+import { supabase } from "@/lib/supabase"
 
 export default function Home() {
   // const [jokes, setJokes] = useState<Joke | null>(null)
@@ -35,15 +36,51 @@ export default function Home() {
     const fetchJokes = async () => {
       try {
         // Fetch todays joke
-        const res = await fetch(`/api/joke/single?&id=${index}`, {
-          next: { revalidate: 3600 }
-        })
+        // Create a cache key using the current date
+        const today = new Date().toISOString().split('T')[0];
+        const cacheKey = `joke-of-the-day-${today}-${index}`;
 
-        const jokesFromDB = await res.json()
+        // Check if we have a cached version
+        const cachedJoke = localStorage.getItem(cacheKey);
+
+        if (cachedJoke) {
+          const parsedJoke = JSON.parse(cachedJoke);
+          setJokeOfTheDay(parsedJoke);
+          return;
+        }
+
+        // If no cache, fetch from Supabase
+        const { data: jokes, error } = await supabase
+          .from("jokes")
+          .select(
+            `
+            *,
+            ratings:ratings(*)
+            `
+          )
+          .eq("id", index)
+          .limit(1)
+          .single();
+
+        // Save to cache if successful
+        if (!error && jokes) {
+          localStorage.setItem(cacheKey, JSON.stringify({
+            ...jokes,
+            averageRating: jokes.ratings.length > 0
+              ? jokes.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / jokes.ratings.length
+              : 0
+          }));
+        }
+
+        if (error) {
+          console.error("Error while fetching jokes from supabase", error);
+          return;
+        }
+
         const jokesWithAverageRatings = {
-          ...jokesFromDB,
-          averageRating: jokesFromDB.ratings.length > 0
-            ? jokesFromDB.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / jokesFromDB.ratings.length
+          ...jokes,
+          averageRating: jokes.ratings.length > 0
+            ? jokes.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / jokes.ratings.length
             : 0
         };
 
@@ -54,6 +91,16 @@ export default function Home() {
     }
 
     fetchJokes()
+
+    // Cleanup runs after the fetcching starts
+    setTimeout(() => {
+      const today = new Date().toISOString().split('T')[0];
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('jok-of-the-day') && !key.includes(today)) {
+          localStorage.removeItem(key);
+        }
+      });
+    }, 1000)
   }, [jokeOfTheDay])
 
   return (
