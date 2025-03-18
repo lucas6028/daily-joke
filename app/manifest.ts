@@ -2,9 +2,10 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Daily Joke",
-    short_name: "Daily-Joke",
-    description: "Joke of the Day. Start your day with a laugh!",
+    name: "Daily Joke | 讓每天都從歡笑開始",
+    short_name: "Daily Joke",
+    description:
+      "您的生活增添一抹笑容！我們每天提供最新、最有趣的笑話，涵蓋科技、美食、雙關語等多種類型。每日更新，讓您的一天從微笑開始。",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",

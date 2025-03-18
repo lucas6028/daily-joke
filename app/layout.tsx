@@ -15,8 +15,9 @@ const inter = Inter({ subsets: ["latin"] })
 export const dynamic = "force-static"
 
 export const metadata: Metadata = {
-  title: "Daily Joke",
-  description: "Get your daily dose of laughter with our joke collection",
+  title: "Daily Joke | 讓每天都從歡笑開始",
+  description:
+    "為您的生活增添一抹笑容！我們每天提供最新、最有趣的笑話，涵蓋科技、美食、雙關語等多種類型。每日更新，讓您的一天從微笑開始。",
 }
 
 export default function RootLayout({
@@ -29,10 +30,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.png" type="image/png" sizes="any" />
         {/* Open Graph meta tags */}
-        <meta property="og:title" content="Daily Joke" />
+        <meta property="og:title" content="Daily Joke | 讓每天都從歡笑開始" />
         <meta
           property="og:description"
-          content="Joke of the Day. Start your day with a laugh!"
+          content="每天一則精選笑話，帶給您歡樂與放鬆。讓您的一天從微笑開始！"
         />
         <meta property="og:image" content="/icon-512x512.png" />
         <meta property="og:url" content="https://daily-joke.vercel.app" />

@@ -69,9 +69,9 @@ export default function Home() {
             <span className="inline-block">
               <Sparkles className="h-8 w-8 inline-block mr-2 text-primary" />
             </span>
-            Joke of the Day
+            每天一則精選笑話
           </h1>
-          <p className="text-muted-foreground">Start your day with a laugh!</p>
+          <p className="text-muted-foreground">帶給您歡樂與放鬆。讓您的一天從微笑開始！</p>
         </motion.div>
 
         {jokeOfTheDay && (
