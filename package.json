@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "cypress:open": "cypress opne"
+    "cypress:open": "cypress open"
   },
   "dependencies": {
     "@next/third-parties": "^15.2.1",
