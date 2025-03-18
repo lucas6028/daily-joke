@@ -9,6 +9,8 @@ on:
 jobs:
   cypress:
     runs-on: ubuntu-latest
+    env:
+      NEXT_PUBLIC_BASE_URL: "https://daily-joke.vercel.app"
 
     steps:
       - name: Checkout code
