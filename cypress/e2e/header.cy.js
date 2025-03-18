@@ -29,3 +29,43 @@ describe("Navigate to home page by clicking the logo", () => {
     cy.url().should("include", "/");
   });
 });
+
+describe("Change the theme to dark mode", () => {
+  it("should change the theme to dark mode", () => {
+    cy.visit("http://localhost:3000");
+
+    // Target the theme toggle button by its aria label instead
+    cy.get(
+      'button[aria-label="Toggle theme"], button:has(span.sr-only:contains("Toggle theme"))'
+    ).click();
+
+    // Look for the dropdown item in the entire document, not just nav
+    cy.contains("Dark").click();
+
+    // Add a short wait to allow theme to be applied
+    cy.wait(500);
+
+    // Check for dark mode
+    cy.get("html").should("have.class", "dark");
+  });
+});
+
+describe("Change the theme to light mode", () => {
+  it("should change the theme to light mode", () => {
+    cy.visit("http://localhost:3000");
+
+    // Target the theme toggle button by its aria label instead
+    cy.get(
+      'button[aria-label="Toggle theme"], button:has(span.sr-only:contains("Toggle theme"))'
+    ).click();
+
+    // Look for the dropdown item in the entire document, not just nav
+    cy.contains("Light").click();
+
+    // Add a short wait to allow theme to be applied
+    cy.wait(500);
+
+    // Check for dark mode
+    cy.get("html").should("have.class", "light");
+  });
+});
