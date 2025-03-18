@@ -11,15 +11,14 @@ describe("Navigate to random page testing", () => {
 describe("Navigate to categories page testing", () => {
   it("should navigate to the categories page", () => {
     cy.visit(
-      (process.env.NEXT_PUBLIC_BASE_URL || "https://daily-joke.vercel.app") +
-        "/categories"
+      process.env.NEXT_PUBLIC_BASE_URL || "https://daily-joke.vercel.app"
     );
     cy.get("nav").contains("Categories").click();
     cy.url().should("include", "/categories");
   });
 });
 
-describe("Navigate to home page testin", () => {
+describe("Navigate to home page testing", () => {
   it("should navigate to the home page", () => {
     cy.visit(
       (process.env.NEXT_PUBLIC_BASE_URL || "https://daily-joke.vercel.app") +
