@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - integration_testing
 
 jobs:
   cypress:
