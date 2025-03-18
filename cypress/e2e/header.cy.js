@@ -1,6 +1,9 @@
+const baseUrl =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://daily-joke.vercel.app";
+
 describe("Navigate to random page testing", () => {
   it("should navigate to the random page", () => {
-    cy.visit(process.env.NEXT_PUBLIC_BASE_URL);
+    cy.visit(baseUrl);
     cy.get("nav").contains("Random").click();
     cy.url().should("include", "/random");
   });
@@ -8,7 +11,7 @@ describe("Navigate to random page testing", () => {
 
 describe("Navigate to categories page testing", () => {
   it("should navigate to the categories page", () => {
-    cy.visit(process.env.NEXT_PUBLIC_BASE_URL);
+    cy.visit(baseUrl);
     cy.get("nav").contains("Categories").click();
     cy.url().should("include", "/categories");
   });
@@ -16,7 +19,7 @@ describe("Navigate to categories page testing", () => {
 
 describe("Navigate to home page testing", () => {
   it("should navigate to the home page", () => {
-    cy.visit(process.env.NEXT_PUBLIC_BASE_URL + "/random");
+    cy.visit(baseUrl + "/random");
     cy.get("nav").contains("Home").click();
     cy.url().should("include", "/");
   });
@@ -24,7 +27,7 @@ describe("Navigate to home page testing", () => {
 
 describe("Navigate to home page by clicking the logo", () => {
   it("should navigate to the home page", () => {
-    cy.visit(process.env.NEXT_PUBLIC_BASE_URL + "/random");
+    cy.visit(baseUrl + "/random");
     cy.get("nav").contains("Home").click();
     cy.url().should("include", "/");
   });
@@ -32,7 +35,7 @@ describe("Navigate to home page by clicking the logo", () => {
 
 describe("Change the theme to dark mode", () => {
   it("should change the theme to dark mode", () => {
-    cy.visit(process.env.NEXT_PUBLIC_BASE_URL);
+    cy.visit(baseUrl);
 
     // Target the theme toggle button by its aria label instead
     cy.get(
@@ -52,7 +55,7 @@ describe("Change the theme to dark mode", () => {
 
 describe("Change the theme to light mode", () => {
   it("should change the theme to light mode", () => {
-    cy.visit(process.env.NEXT_PUBLIC_BASE_URL);
+    cy.visit(baseUrl);
 
     // Target the theme toggle button by its aria label instead
     cy.get(
