@@ -10,7 +10,10 @@ describe("Navigate to random page testing", () => {
 
 describe("Navigate to categories page testing", () => {
   it("should navigate to the categories page", () => {
-    cy.visit(process.env.NEXT_PUBLIC_BASE_URL);
+    cy.visit(
+      (process.env.NEXT_PUBLIC_BASE_URL || "https://daily-joke.vercel.app") +
+        "/categories"
+    );
     cy.get("nav").contains("Categories").click();
     cy.url().should("include", "/categories");
   });
