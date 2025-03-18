@@ -8,6 +8,6 @@ export default defineConfig({
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     async setupNodeEvents(on, config) {},
-    baseUrl: "http://localhost:3000",
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   },
 });
