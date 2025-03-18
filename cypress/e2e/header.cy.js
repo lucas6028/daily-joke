@@ -1,11 +1,3 @@
-describe("Navigate to home page testin", () => {
-  it("should navigate to the home page", () => {
-    cy.visit("http://localhost:3000/random");
-    cy.get("nav").contains("Home").click();
-    cy.url().should("include", "/");
-  });
-});
-
 describe("Navigate to random page testing", () => {
   it("should navigate to the random page", () => {
     cy.visit("http://localhost:3000");
@@ -19,5 +11,21 @@ describe("Navigate to categories page testing", () => {
     cy.visit("http://localhost:3000");
     cy.get("nav").contains("Categories").click();
     cy.url().should("include", "/categories");
+  });
+});
+
+describe("Navigate to home page testin", () => {
+  it("should navigate to the home page", () => {
+    cy.visit("http://localhost:3000/random");
+    cy.get("nav").contains("Home").click();
+    cy.url().should("include", "/");
+  });
+});
+
+describe("Navigate to home page by clicking the logo", () => {
+  it("should navigate to the home page", () => {
+    cy.visit("http://localhost:3000/random");
+    cy.get("nav").contains("Home").click();
+    cy.url().should("include", "/");
   });
 });
