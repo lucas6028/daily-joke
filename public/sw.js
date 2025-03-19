@@ -1,7 +1,7 @@
 // const CACHE_NAME = "daily-joke-v1";
 // const urlsToCache = [
 //   "/",
-//   "/favicon.png",
+//   "/favicon.svg",
 //   "/icon-192x192.png",
 //   "/icon-512x512.png",
 // ];

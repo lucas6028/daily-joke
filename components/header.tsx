@@ -34,7 +34,7 @@ export default function Header() {
         <div className="flex items-center gap-2 font-semibold">
           <span className="text-2xl">
             <Link key="home" href="/">
-              <Image src="/favicon.png" alt="daily-joke logo" width={30} height={30} className="inline-block" />
+              <Image src="/favicon.svg" alt="daily-joke logo" width={30} height={30} className="inline-block" />
             </Link>
           </span>
           <span className="hidden sm:inline-block">Daily Joke</span>

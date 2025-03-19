@@ -28,7 +28,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.png" type="image/png" sizes="any" />
+        <link rel="icon" href="/favicon.svg" type="image/png" sizes="any" />
         {/* Open Graph meta tags */}
         <meta property="og:title" content="Daily Joke | 讓每天都從歡笑開始" />
         <meta
