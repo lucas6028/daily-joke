@@ -15,7 +15,8 @@ export default function CategoryPage({ params }: { params: { category: string } 
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
-    technology: "💻",
+    technology: "📱",
+    programming: "💻",
     animal: "🐾",
     food: "🍔",
     science: "🔬",
@@ -28,7 +29,8 @@ export default function CategoryPage({ params }: { params: { category: string } 
     dirty: "🥵",
     absurd: "😑",
     misunderstanding: "😵‍💫",
-    idiom: "🈸"
+    idiom: "🈸",
+    jingle: "🔔",
   }
 
   useEffect(() => {

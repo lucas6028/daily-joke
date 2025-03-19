@@ -22,7 +22,8 @@ export default function Categories() {
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
-    technology: "💻",
+    technology: "📱",
+    programming: "💻",
     animal: "🐾",
     food: "🍔",
     science: "🔬",
@@ -35,7 +36,8 @@ export default function Categories() {
     dirty: "🥵",
     absurd: "😑",
     misunderstanding: "😵‍💫",
-    idiom: "🈸"
+    idiom: "🈸",
+    jingle: "🔔",
   }
 
   return (
