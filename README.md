@@ -50,10 +50,6 @@ yarn install
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
-
-NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
-SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
 VAPID_PRIVATE_KEY=your-vapid-private-key
 UPSTASH_REDIS_REST_URL=your-upstash-redis-rest-url
 UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-rest-token
