@@ -46,6 +46,15 @@ yarn install
 NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+SUPABASE_SERVICE_ROLE_KEY=your-supabase-service-role-key
+VAPID_PRIVATE_KEY=your-vapid-private-key
+UPSTASH_REDIS_REST_URL=your-upstash-redis-rest-url
+UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-rest-token
+NEXT_PUBLIC_BASE_URL=http://localhost:3000
+
 ```
 
 ### Running the Development Server
@@ -94,9 +103,9 @@ yarn start
 
 ## API Routes
 
-- `GET /api/supabase/fetch-jokes`: Fetches jokes from the Supabase database.
-- `POST /api/supabase/insert-ratings`: Inserts a new rating for a joke.
-- `GET /api/supabase/fetch-ratings`: Fetches ratings for a specific joke.
+- `GET /api/supabase/joke/single`: Fetches jokes from the Supabase database.
+- `POST /api/supabase/rating`: Inserts a new rating for a joke.
+- `GET /api/supabase/rating`: Fetches ratings for a specific joke.
 
 ## Learn More
 
