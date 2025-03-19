@@ -16,6 +16,10 @@ Daily Joke is a web application that provides a daily dose of laughter with a co
 
 ![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/preview/categories.png)
 
+
+## Tech Stack
+![alt text](https://github.com/lucas6028/daily-joke/blob/main/assets/tech_stack/stackshare.jpeg)
+
 ## Get Started
 
 ### Prerequisites
