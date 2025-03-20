@@ -1,40 +1,40 @@
 import type { Rating } from "@/types/rating"
-import JokeCard from "@/components/joke-card"
 import { Sparkles } from "lucide-react"
 import { getHashIndex } from "@/lib/getHashIndex"
 import { supabase } from "@/lib/supabase"
 import JokeCardWrapper from "@/components/joke-card-wrapper"
 
-// Server component - data is fetched during page rendering
 export default async function Home() {
-  const index = getHashIndex();
-
-  // Server-side data fetching
-  const { data: jokes, error } = await supabase
+  const index = getHashIndex()
+  
+  // Fetch joke directly during server render
+  const { data: joke, error } = await supabase
     .from("jokes")
-    .select(`
+    .select(
+      `
       *,
       ratings:ratings(*)
-    `)
+      `
+    )
     .eq("id", index)
     .limit(1)
     .single();
-
+    
   if (error) {
     console.error("Error while fetching jokes from supabase", error);
-    // Could render an error state here
-    return <div>Failed to load joke</div>;
+    // You could return an error state here
   }
-
-  const jokeOfTheDay = {
-    ...jokes,
-    averageRating: jokes.ratings.length > 0
-      ? jokes.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / jokes.ratings.length
+  
+  // Calculate average rating on the server
+  const jokeOfTheDay = joke ? {
+    ...joke,
+    averageRating: joke.ratings.length > 0
+      ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) / joke.ratings.length
       : 0
-  };
+  } : null;
 
   return (
-    <div className="page-transition space-y-10">
+    <div className="space-y-10">
       <section>
         <div className="text-center space-y-2 mb-6">
           <h1 className="text-3xl font-bold tracking-tight">
@@ -46,9 +46,9 @@ export default async function Home() {
           <p className="text-muted-foreground">帶給您歡樂與放鬆。讓您的一天從微笑開始！</p>
         </div>
 
-        <JokeCardWrapper>
-          <JokeCard joke={jokeOfTheDay} />
-        </JokeCardWrapper>
+        {jokeOfTheDay && (
+          <JokeCardWrapper joke={jokeOfTheDay} />
+        )}
       </section>
     </div>
   )
