@@ -1,23 +1,25 @@
 const baseUrl =
   process.env.NEXT_PUBLIC_BASE_URL || "https://daily-joke.vercel.app";
 
-describe("Navigate to random page testing", () => {
+describe("Test navigation in header", () => {
   it("should navigate to the random page", () => {
     cy.visit(baseUrl);
     cy.get("nav").contains("Random").click();
     cy.url().should("include", "/random");
   });
-});
 
-describe("Navigate to categories page testing", () => {
   it("should navigate to the categories page", () => {
     cy.visit(baseUrl);
     cy.get("nav").contains("Categories").click();
     cy.url().should("include", "/categories");
   });
-});
 
-describe("Navigate to home page testing", () => {
+  it("should navigate to the home page", () => {
+    cy.visit(baseUrl + "/random");
+    cy.get("nav").contains("Home").click();
+    cy.url().should("include", "/");
+  });
+
   it("should navigate to the home page", () => {
     cy.visit(baseUrl + "/random");
     cy.get("nav").contains("Home").click();
@@ -25,15 +27,7 @@ describe("Navigate to home page testing", () => {
   });
 });
 
-describe("Navigate to home page by clicking the logo", () => {
-  it("should navigate to the home page", () => {
-    cy.visit(baseUrl + "/random");
-    cy.get("nav").contains("Home").click();
-    cy.url().should("include", "/");
-  });
-});
-
-describe("Change the theme to dark mode", () => {
+describe("Change the theme of website", () => {
   it("should change the theme to dark mode", () => {
     cy.visit(baseUrl);
 
@@ -51,9 +45,7 @@ describe("Change the theme to dark mode", () => {
     // Check for dark mode
     cy.get("html").should("have.class", "dark");
   });
-});
 
-describe("Change the theme to light mode", () => {
   it("should change the theme to light mode", () => {
     cy.visit(baseUrl);
 
