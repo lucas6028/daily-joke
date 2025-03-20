@@ -96,7 +96,7 @@ export default function Home() {
     setTimeout(() => {
       const today = new Date().toISOString().split('T')[0];
       Object.keys(localStorage).forEach(key => {
-        if (key.startsWith('jok-of-the-day') && !key.includes(today)) {
+        if (key.startsWith('joke-of-the-day') && !key.includes(today)) {
           localStorage.removeItem(key);
         }
       });
