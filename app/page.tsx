@@ -6,6 +6,7 @@ import JokeCardWrapper from "@/components/joke-card-wrapper"
 
 export default async function Home() {
   const index = getHashIndex()
+  console.log('today index:', index)
   
   // Fetch joke directly during server render
   const { data: joke, error } = await supabase
