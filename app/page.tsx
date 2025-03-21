@@ -1,3 +1,5 @@
+export const revalidate = 3600; // 1 hour
+
 import type { Rating } from "@/types/rating"
 import { Sparkles } from "lucide-react"
 import { getHashIndex } from "@/lib/getHashIndex"
