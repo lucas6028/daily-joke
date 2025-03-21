@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, use } from 'react';
 import { useJokeContext } from '@/context/joke-context'
 import type { Joke } from '@/types/joke'
 import JokeCard from '@/components/joke-card'
@@ -9,7 +9,8 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
+export default function CategoryPage(props: { params: Promise<{ category: string }> }) {
+  const params = use(props.params);
   const { jokes } = useJokeContext()
   const [categoryJokes, setCategoryJokes] = useState<Joke[]>([])
 

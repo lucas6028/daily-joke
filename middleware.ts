@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server'
+import { ipAddress } from "@vercel/functions";
 import type { NextRequest } from 'next/server'
 import { checkRateLimit, apiRateLimit, loginRateLimit } from '@/lib/rate-limit'
 
@@ -9,7 +10,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Get identifier for rate limiting
-  const ip = request.ip ?? request.headers.get('x-forwarded-for') ?? 'anonymous'
+  const ip = ipAddress(request) ?? request.headers.get('x-forwarded-for') ?? 'anonymous'
 
   // Choose rate limiter based on route
   let limiter = apiRateLimit
