@@ -1,29 +1,29 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import Image from "next/image"
-import { ModeToggle } from "@/components/mode-toggle"
-import { Button } from "@/components/ui/button"
-import { Home, List, Shuffle } from "lucide-react"
-import { usePathname } from "next/navigation"
+import Link from 'next/link'
+import Image from 'next/image'
+import { ModeToggle } from '@/components/mode-toggle'
+import { Button } from '@/components/ui/button'
+import { Home, List, Shuffle } from 'lucide-react'
+import { usePathname } from 'next/navigation'
 
 export default function Header() {
   const pathname = usePathname()
 
   const navItems = [
     {
-      name: "Home",
-      href: "/",
+      name: 'Home',
+      href: '/',
       icon: Home,
     },
     {
-      name: "Random",
-      href: "/random",
+      name: 'Random',
+      href: '/random',
       icon: Shuffle,
     },
     {
-      name: "Categories",
-      href: "/categories",
+      name: 'Categories',
+      href: '/categories',
       icon: List,
     },
   ]
@@ -34,7 +34,13 @@ export default function Header() {
         <div className="flex items-center gap-2 font-semibold">
           <span className="text-2xl">
             <Link key="home" href="/">
-              <Image src="/favicon.svg" alt="daily-joke logo" width={30} height={30} className="inline-block" />
+              <Image
+                src="/favicon.svg"
+                alt="daily-joke logo"
+                width={30}
+                height={30}
+                className="inline-block"
+              />
             </Link>
           </span>
           <span className="hidden sm:inline-block">Daily Joke</span>
@@ -42,11 +48,13 @@ export default function Header() {
 
         <nav className="flex items-center gap-2">
           {navItems.map((item) => {
-            const isActive = pathname === item.href || (item.href !== "/" && pathname && pathname.startsWith(item.href))
+            const isActive =
+              pathname === item.href ||
+              (item.href !== '/' && pathname && pathname.startsWith(item.href))
 
             return (
               <Link key={item.name} href={item.href}>
-                <Button variant={isActive ? "secondary" : "ghost"} size="sm" className="gap-2">
+                <Button variant={isActive ? 'secondary' : 'ghost'} size="sm" className="gap-2">
                   <item.icon className="h-4 w-4" />
                   <span className="hidden sm:inline-block">{item.name}</span>
                 </Button>
@@ -59,4 +67,3 @@ export default function Header() {
     </header>
   )
 }
-

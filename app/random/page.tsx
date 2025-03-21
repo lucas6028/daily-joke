@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { useJokeContext } from "@/context/joke-context"
-import JokeCard from "@/components/joke-card"
-import { Button } from "@/components/ui/button"
-import { RefreshCw } from "lucide-react"
-import { motion } from "framer-motion"
+import { useState } from 'react'
+import { useJokeContext } from '@/context/joke-context'
+import JokeCard from '@/components/joke-card'
+import { Button } from '@/components/ui/button'
+import { RefreshCw } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 export default function RandomJoke() {
   const getRandomId = (prev: number): number => {
@@ -39,7 +39,11 @@ export default function RandomJoke() {
           <h1 className="text-3xl font-bold tracking-tight">Random Joke</h1>
           <p className="text-muted-foreground">Click the button for a new random joke!</p>
           <Button size="lg" onClick={handleGetRandomJoke} disabled={isLoading} className="mx-auto">
-            {isLoading ? <RefreshCw className="mr-2 h-4 w-4 animate-spin" /> : <RefreshCw className="mr-2 h-4 w-4" />}
+            {isLoading ? (
+              <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <RefreshCw className="mr-2 h-4 w-4" />
+            )}
             New Random Joke
           </Button>
         </motion.div>
@@ -59,4 +63,3 @@ export default function RandomJoke() {
     </div>
   )
 }
-

@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Star } from "lucide-react"
-import { motion } from "framer-motion"
+import { useState } from 'react'
+import { Star } from 'lucide-react'
+import { motion } from 'framer-motion'
 
 interface RatingProps {
   initialRating: number
@@ -26,7 +26,7 @@ export default function Rating({ initialRating, onRate }: RatingProps) {
           <motion.button
             key={index}
             className={`text-2xl focus:outline-none ${
-              ratingValue <= (hover || rating) ? "text-yellow-400" : "text-gray-300"
+              ratingValue <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'
             }`}
             onClick={() => handleRate(ratingValue)}
             onMouseEnter={() => setHover(ratingValue)}
@@ -34,12 +34,13 @@ export default function Rating({ initialRating, onRate }: RatingProps) {
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
           >
-            <Star className="w-6 h-6" fill={ratingValue <= (hover || rating) ? "currentColor" : "none"} />
+            <Star
+              className="w-6 h-6"
+              fill={ratingValue <= (hover || rating) ? 'currentColor' : 'none'}
+            />
           </motion.button>
         )
       })}
     </div>
   )
 }
-
-

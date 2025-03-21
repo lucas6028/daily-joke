@@ -1,13 +1,13 @@
-"use client"
+'use client'
 
-import { useEffect, useState } from "react"
-import { useJokeContext } from "@/context/joke-context"
-import type { Joke } from "@/types/joke"
-import JokeCard from "@/components/joke-card"
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { useEffect, useState } from 'react'
+import { useJokeContext } from '@/context/joke-context'
+import type { Joke } from '@/types/joke'
+import JokeCard from '@/components/joke-card'
+import { motion } from 'framer-motion'
+import { Button } from '@/components/ui/button'
+import { ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function CategoryPage({ params }: { params: { category: string } }) {
   const { jokes } = useJokeContext()
@@ -15,27 +15,29 @@ export default function CategoryPage({ params }: { params: { category: string } 
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
-    technology: "📱",
-    programming: "💻",
-    animal: "🐾",
-    food: "🍔",
-    science: "🔬",
-    pun: "😏",
-    dad: "👨",
-    math: "🧮",
-    music: "🎵",
-    sports: "⚽",
-    office: "🏢",
-    dirty: "🥵",
-    absurd: "😑",
-    misunderstanding: "😵‍💫",
-    idiom: "🈸",
-    jingle: "🔔",
+    technology: '📱',
+    programming: '💻',
+    animal: '🐾',
+    food: '🍔',
+    science: '🔬',
+    pun: '😏',
+    dad: '👨',
+    math: '🧮',
+    music: '🎵',
+    sports: '⚽',
+    office: '🏢',
+    dirty: '🥵',
+    absurd: '😑',
+    misunderstanding: '😵‍💫',
+    idiom: '🈸',
+    jingle: '🔔',
   }
 
   useEffect(() => {
     if (jokes.length > 0) {
-      const filtered = jokes.filter((joke) => joke.category.toLowerCase() === params.category.toLowerCase())
+      const filtered = jokes.filter(
+        (joke) => joke.category.toLowerCase() === params.category.toLowerCase()
+      )
       setCategoryJokes(filtered)
     }
   }, [jokes, params.category])
@@ -55,7 +57,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
           className="flex items-center gap-2"
         >
           <span className="text-3xl" aria-hidden="true">
-            {categoryEmojis[params.category] || "😄"}
+            {categoryEmojis[params.category] || '😄'}
           </span>
           <h1 className="text-3xl font-bold tracking-tight capitalize">{params.category} Jokes</h1>
         </motion.div>
@@ -82,4 +84,3 @@ export default function CategoryPage({ params }: { params: { category: string } 
     </div>
   )
 }
-

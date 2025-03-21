@@ -1,10 +1,10 @@
-import { defineConfig } from "cypress";
+import { defineConfig } from 'cypress'
 
 export default defineConfig({
   viewportWidth: 1280,
   viewportHeight: 720,
-  fixturesFolder: "cypress/fixtures",
-  defaultBrowser: "chrome",
+  fixturesFolder: 'cypress/fixtures',
+  defaultBrowser: 'chrome',
 
   e2e: {
     // We've imported your old cypress plugins here.
@@ -19,8 +19,8 @@ export default defineConfig({
 
   component: {
     devServer: {
-      framework: "next",
-      bundler: "webpack",
+      framework: 'next',
+      bundler: 'webpack',
     },
   },
-});
+})

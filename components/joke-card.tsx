@@ -1,15 +1,15 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import type { Joke } from "@/types/joke"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { Copy, Check, Share2 } from "lucide-react"
-import { toast } from "@/components/ui/use-toast"
-import { motion } from "framer-motion"
-import Rating from "@/components/rating"
-import { useJokeContext } from "@/context/joke-context"
+import { useState } from 'react'
+import type { Joke } from '@/types/joke'
+import { Card, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Copy, Check, Share2 } from 'lucide-react'
+import { toast } from '@/components/ui/use-toast'
+import { motion } from 'framer-motion'
+import Rating from '@/components/rating'
+import { useJokeContext } from '@/context/joke-context'
 
 interface JokeCardProps {
   joke: Joke
@@ -25,8 +25,8 @@ export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
     setCopied(true)
 
     toast({
-      title: "Copied to clipboard",
-      description: "Joke copied to clipboard successfully!",
+      title: 'Copied to clipboard',
+      description: 'Joke copied to clipboard successfully!',
     })
 
     setTimeout(() => setCopied(false), 2000)
@@ -36,16 +36,16 @@ export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
     if (navigator.share) {
       navigator
         .share({
-          title: "Check out this joke!",
-          text: joke.text + "\n",
+          title: 'Check out this joke!',
+          text: joke.text + '\n',
           url: window.location.href,
         })
         .catch(console.error)
     } else {
       handleCopy()
       toast({
-        title: "Sharing not supported",
-        description: "The joke has been copied to your clipboard instead.",
+        title: 'Sharing not supported',
+        description: 'The joke has been copied to your clipboard instead.',
       })
     }
   }
@@ -53,7 +53,7 @@ export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
   const handleRate = (rating: number) => {
     rateJoke(joke.id, rating)
     toast({
-      title: "Thanks for rating!",
+      title: 'Thanks for rating!',
       description: `You rated this joke ${rating} out of 10.`,
     })
 
@@ -78,8 +78,8 @@ export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
           <div className="flex items-center justify-between">
             <Rating initialRating={joke.averageRating} onRate={handleRate} />
             <span className="text-sm text-muted-foreground">
-              Average: {joke.averageRating.toFixed(1)} ({joke.ratings.length}{" "}
-              {joke.ratings.length === 1 ? "rating" : "ratings"})
+              Average: {joke.averageRating.toFixed(1)} ({joke.ratings.length}{' '}
+              {joke.ratings.length === 1 ? 'rating' : 'ratings'})
             </span>
           </div>
         </CardContent>
@@ -89,12 +89,15 @@ export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
             Share
           </Button>
           <Button variant="ghost" size="sm" onClick={handleCopy}>
-            {copied ? <Check className="h-4 w-4 mr-2 text-green-500" /> : <Copy className="h-4 w-4 mr-2" />}
-            {copied ? "Copied" : "Copy"}
+            {copied ? (
+              <Check className="h-4 w-4 mr-2 text-green-500" />
+            ) : (
+              <Copy className="h-4 w-4 mr-2" />
+            )}
+            {copied ? 'Copied' : 'Copy'}
           </Button>
         </CardFooter>
       </Card>
     </motion.div>
   )
 }
-

@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { useJokeContext } from "@/context/joke-context"
-import { motion } from "framer-motion"
-import Link from "next/link"
-import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowRight } from "lucide-react"
+import { useJokeContext } from '@/context/joke-context'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { Card, CardContent } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { ArrowRight } from 'lucide-react'
 
 export default function Categories() {
   const { jokes } = useJokeContext()
@@ -17,27 +17,27 @@ export default function Categories() {
       acc[category] = jokes.filter((joke) => joke.category === category).length
       return acc
     },
-    {} as Record<string, number>,
+    {} as Record<string, number>
   )
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
-    technology: "📱",
-    programming: "💻",
-    animal: "🐾",
-    food: "🍔",
-    science: "🔬",
-    pun: "😏",
-    dad: "👨",
-    math: "🧮",
-    music: "🎵",
-    sports: "⚽",
-    office: "🏢",
-    dirty: "🥵",
-    absurd: "😑",
-    misunderstanding: "😵‍💫",
-    idiom: "🈸",
-    jingle: "🔔",
+    technology: '📱',
+    programming: '💻',
+    animal: '🐾',
+    food: '🍔',
+    science: '🔬',
+    pun: '😏',
+    dad: '👨',
+    math: '🧮',
+    music: '🎵',
+    sports: '⚽',
+    office: '🏢',
+    dirty: '🥵',
+    absurd: '😑',
+    misunderstanding: '😵‍💫',
+    idiom: '🈸',
+    jingle: '🔔',
   }
 
   return (
@@ -65,7 +65,7 @@ export default function Categories() {
                 <CardContent className="p-6 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="text-4xl" aria-hidden="true">
-                      {categoryEmojis[category] || "😄"}
+                      {categoryEmojis[category] || '😄'}
                     </div>
                     <div>
                       <h2 className="text-xl font-semibold capitalize">{category}</h2>
@@ -84,4 +84,3 @@ export default function Categories() {
     </div>
   )
 }
-
