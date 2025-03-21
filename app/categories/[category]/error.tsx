@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import { useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { AlertTriangle, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { AlertTriangle, ArrowLeft } from 'lucide-react'
+import Link from 'next/link'
 
 export default function CategoryError({
   error,
@@ -30,7 +30,8 @@ export default function CategoryError({
         <h1 className="text-2xl font-bold mb-2">Category Error</h1>
 
         <p className="text-muted-foreground mb-6">
-          We couldn&apos;t load jokes for this category. It might not exist or there could be a problem with our system.
+          We couldn&apos;t load jokes for this category. It might not exist or there could be a
+          problem with our system.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
@@ -49,4 +50,3 @@ export default function CategoryError({
     </div>
   )
 }
-

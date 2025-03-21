@@ -1,7 +1,7 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { FolderX, ArrowLeft } from "lucide-react"
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { FolderX, ArrowLeft } from 'lucide-react'
 
 export default function CategoryNotFound() {
   return (
@@ -16,7 +16,8 @@ export default function CategoryNotFound() {
         <h1 className="text-2xl font-bold mb-2">Category Not Found</h1>
 
         <p className="text-muted-foreground mb-6">
-          The joke category you&apos;re looking for doesn&apos;t exist. Check out our other categories for some laughs!
+          The joke category you&apos;re looking for doesn&apos;t exist. Check out our other
+          categories for some laughs!
         </p>
 
         <Link href="/categories">
@@ -29,4 +30,3 @@ export default function CategoryNotFound() {
     </div>
   )
 }
-
