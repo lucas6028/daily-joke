@@ -1,0 +1,18 @@
+{
+  "id": "1",
+  "text": "Why do programmers prefer dark mode? Because light attracts bugs!",
+  "category": "programming",
+  "ratings": [
+    {
+      "id": "2",
+      "joke_id": "1",
+      "rating": 5
+    },
+    {
+      "id": "3",
+      "joke_id": "1",
+      "rating": 5
+    }
+  ],
+  "averageRating": 5.0
+}
