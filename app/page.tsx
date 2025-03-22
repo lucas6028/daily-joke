@@ -15,9 +15,7 @@ async function getJoke() {
       throw new Error('Server configuration error: Base URL not defined')
     }
 
-    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
-      next: { revalidate: 86400 },
-    })
+    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`)
 
     if (!response.ok) {
       throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
