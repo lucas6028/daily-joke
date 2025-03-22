@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint",
+    "dev": "pnpm next dev",
+    "build": "pnpm next build",
+    "start": "pnpm next start",
+    "lint": "pnpm next lint",
     "cypress:open": "cypress open",
     "test:prettier": "prettier -c '**/*.{js,jsx,ts,tsx,css,md,mdx,json}'",
     "format": "prettier --write '**/*.{js,jsx,ts,tsx,css,md,mdx,json}'"

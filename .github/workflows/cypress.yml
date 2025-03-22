@@ -10,7 +10,7 @@ jobs:
   cypress:
     runs-on: ubuntu-latest
     env:
-      NEXT_PUBLIC_BASE_URL: "https://daily-joke.vercel.app"
+      NEXT_PUBLIC_BASE_URL: 'https://daily-joke.vercel.app'
 
     steps:
       - name: Checkout code
@@ -19,10 +19,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: "14" # Specify the Node.js version you want to use
+          node-version: '14' # Specify the Node.js version you want to use
+
+      - Setup pnpm:
+        uses: pnpm/action-setup@v2
+        with:
+          version: '9'
 
       - name: Install dependencies
-        run: npm install
+        run: pnpm install
 
       - name: Run Cypress tests
         run: npx cypress run
