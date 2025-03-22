@@ -4,5 +4,19 @@
     "env": {
       "ENABLE_EXPERIMENTAL_COREPACK": "1"
     }
-  }
+  },
+  "crons": [
+    {
+      "name": "revalidate home page",
+      "path": "/api/revalidate",
+      "schedule": "0 0 * * *",
+      "method": "POST",
+      "body": "{\"secret\": \"${process.env.REVALIDATE_SECRET}\", \"path\": \"/\"}"
+    },
+    {
+      "name": "test-cron",
+      "commmand": "echo 'test-cron'",
+      "schedule": "5 * * * *"
+    }
+  ]
 }
