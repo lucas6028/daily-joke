@@ -40,5 +40,9 @@ jobs:
           restore-keys: |
             cypress-cache-${{ runner.os }}-
 
+      # Ensure Cypress binary is installed
+      - name: Verify Cypress installation
+        run: npx cypress verify
+
       - name: Run Cypress tests
         run: npx cypress run
