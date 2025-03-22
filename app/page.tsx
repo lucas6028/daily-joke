@@ -31,9 +31,6 @@ async function getJoke() {
 export default async function Home() {
   let joke
   let errorMessage = null
-  
-  const index = getHashIndex()
-  console.log('today index:', index)
 
   try {
     joke = await getJoke()
