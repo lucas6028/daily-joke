@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { revalidate } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
@@ -10,10 +10,10 @@ export async function GET(request: NextRequest) {
   }
 
   // Path to revalidate (default to home page '/')
-  const path = body.path || '/'
+  const path = request.nextUrl.searchParams.get('path') || '/'
 
   try {
-    await revalidate(path)
+    await revalidatePath(path)
     return NextResponse.json({ success: true, message: `Revalidated ${path}` })
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 })
