@@ -7,7 +7,6 @@
   },
   "crons": [
     {
-      "name": "revalidate home page",
       "path": "/api/revalidate",
       "schedule": "0 0 * * *",
       "method": "POST",
