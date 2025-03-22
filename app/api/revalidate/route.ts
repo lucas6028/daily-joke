@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidate } from 'next/cache'
 
-export async function POST(request: NextRequest) {
-  const body = await request.body.json()
-  const secret = body.secret
-
-  if (secret !== process.env.REVALIDATE_SECRET) {
-    return NextResponse.json({ error: 'Unauthroized' }, { status: 401 })
+export async function GET(request: NextRequest) {
+  const authHeader = request.headers.get('authorization')
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response('Unauthorized', {
+      status: 401,
+    })
   }
 
   // Path to revalidate (default to home page '/')
