@@ -8,3 +8,5 @@ updates:
     ignore:
       - dependency-name: 'next'
         versions: ['14.x']
+      - dependency-name: 'tailwindcss'
+        versions: ['4.x']
