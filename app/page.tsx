@@ -1,9 +1,6 @@
-export const revalidate = 3600 // 1 hour
-
 import type { Rating } from '@/types/rating'
 import { Sparkles } from 'lucide-react'
 import { getHashIndex } from '@/lib/getHashIndex'
-import { supabase } from '@/lib/supabase'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 
 export default async function Home() {
@@ -11,17 +8,10 @@ export default async function Home() {
   console.log('today index:', index)
 
   // Fetch joke directly during server render
-  const { data: joke, error } = await supabase
-    .from('jokes')
-    .select(
-      `
-      *,
-      ratings:ratings(*)
-      `
-    )
-    .eq('id', index)
-    .limit(1)
-    .single()
+  const data = await fetch(`/api/joke/single?id=${index}`, {
+    next: { revalidate: 86400 },
+  })
+  const joke = await data.json()
 
   if (error) {
     console.error('Error while fetching jokes from supabase', error)
