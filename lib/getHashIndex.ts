@@ -10,9 +10,17 @@ export function getHashIndex() {
     return hash
   }
 
-  const date = new Date()
-  const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`
-  const seed = hashCode(dateString)
+  const now = new Date()
+  const dateString = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Taipei',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(now)
+
+  // Format it as YYYY-MM-DD
+  const formattedDate = dateString.replace(/\//g, '-')
+  const seed = hashCode(formattedDate)
   const index = Math.abs(seed % 68) + 1
 
   return index
