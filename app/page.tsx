@@ -3,19 +3,26 @@ import { Sparkles } from 'lucide-react'
 import { getHashIndex } from '@/lib/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 
+async function getJoke() {
+    const index = getHashIndex()
+    console.log('today index:', index)
+
+    // Fetch joke directly during server render
+    // Use absolute URL for server component
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    const data = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
+      next: { revalidate: 86400 },
+    })
+
+    return data.json()
+}
+
 export default async function Home() {
-  const index = getHashIndex()
-  console.log('today index:', index)
+  const joke = await getJoke()
 
-  // Fetch joke directly during server render
-  const data = await fetch(`/api/joke/single?id=${index}`, {
-    next: { revalidate: 86400 },
-  })
-  const joke = await data.json()
-
-  if (error) {
+  if (!joke) {
     console.error('Error while fetching jokes from supabase', error)
-    // You could return an error state here
+    throw new Error('Error while fetching jokes from server')
   }
 
   // Calculate average rating on the server
