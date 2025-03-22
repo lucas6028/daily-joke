@@ -8,9 +8,7 @@
   "crons": [
     {
       "path": "/api/revalidate",
-      "schedule": "0 0 * * *",
-      "method": "POST",
-      "body": "{\"secret\": \"${process.env.REVALIDATE_SECRET}\", \"path\": \"/\"}"
+      "schedule": "0 0 * * *"
     }
   ]
 }
