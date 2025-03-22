@@ -9,7 +9,7 @@ export default async function Single({ params }: { params: { id: string } }) {
     return <div>Invalid joke ID</div>
   }
   if (index < 1 || index > 68) {
-    return <div>Invalid joke ID</div>
+    return <h1>Sorry. There is no joke with is ID.</h1>
   }
   console.log('joke index:', index)
 
@@ -28,7 +28,7 @@ export default async function Single({ params }: { params: { id: string } }) {
 
   if (error) {
     console.error('Error while fetching jokes from supabase', error)
-    // throw new Error('Error while fetching jokes from supabase')
+    return <h1>Sorry. There is no joke with is ID.</h1>
     // You could return an error state here
   }
 
