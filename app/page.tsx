@@ -1,28 +1,48 @@
 import type { Rating } from '@/types/rating'
-import { Sparkles } from 'lucide-react'
+import { Sparkles, AlertCircle } from 'lucide-react'
 import { getHashIndex } from '@/lib/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 
 async function getJoke() {
+  try {
     const index = getHashIndex()
     console.log('today index:', index)
 
     // Fetch joke directly during server render
     // Use absolute URL for server component
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
-    const data = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
+    if (!baseUrl) {
+      throw new Error('Server configuration error: Base URL not defined')
+    }
+
+    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
       next: { revalidate: 86400 },
     })
 
-    return data.json()
+    if (!response.ok) {
+      throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error('Error fetching joke:', error)
+    return null
+  }
 }
 
 export default async function Home() {
-  const joke = await getJoke()
+  let joke
+  let errorMessage = null
 
-  if (!joke) {
-    console.error('Error while fetching jokes from supabase', error)
-    throw new Error('Error while fetching jokes from server')
+  try {
+    joke = await getJoke()
+
+    if (!joke) {
+      throw new Error('無法獲取笑話，請稍後再試')
+    }
+  } catch (error) {
+    errorMessage = error instanceof Error ? error.message : '發生未知錯誤'
+    console.error('Error while fetching jokes:', error)
   }
 
   // Calculate average rating on the server
@@ -30,7 +50,7 @@ export default async function Home() {
     ? {
         ...joke,
         averageRating:
-          joke.ratings.length > 0
+          joke.ratings?.length > 0
             ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) /
               joke.ratings.length
             : 0,
@@ -50,7 +70,19 @@ export default async function Home() {
           <p className="text-muted-foreground">帶給您歡樂與放鬆。讓您的一天從微笑開始！</p>
         </div>
 
-        {jokeOfTheDay && <JokeCardWrapper joke={jokeOfTheDay} />}
+        {errorMessage ? (
+          <div className="p-8 border rounded-lg shadow-sm text-center">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <p className="text-lg font-semibold">笑話載入失敗</p>
+            <p className="text-muted-foreground mt-2">{errorMessage}</p>
+          </div>
+        ) : jokeOfTheDay ? (
+          <JokeCardWrapper joke={jokeOfTheDay} />
+        ) : (
+          <div className="p-8 border rounded-lg shadow-sm text-center">
+            <p className="text-muted-foreground">載入中...</p>
+          </div>
+        )}
       </section>
     </div>
   )
