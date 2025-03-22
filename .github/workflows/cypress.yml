@@ -5,6 +5,7 @@ on:
     branches:
       - main
       - integration_testing
+      - use_pnpm
 
 jobs:
   cypress:
