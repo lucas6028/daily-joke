@@ -39,9 +39,7 @@ cd daily-joke
 2. Install dependencies
 
 ```sh
-npm install
-# or
-yarn install
+pnpm install
 ```
 
 3. Create a `.env.local` file in the root directory and add your Supabase credentials:
@@ -62,9 +60,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
 Start the development server:
 
 ```sh
-npm run dev
-# or
-yarn dev
+pnpm dev
 ```
 
 Open `http://localhost:3000` with your browswer to see the result.
@@ -74,9 +70,7 @@ Open `http://localhost:3000` with your browswer to see the result.
 To build the project for production, run:
 
 ```sh
-npm run build
-# or
-yarn build
+pnpm build
 ```
 
 ### Starting the Production Server
@@ -84,9 +78,7 @@ yarn build
 After building the project, you can start the production server:
 
 ```sh
-npm start
-# or
-yarn start
+pnpm start
 ```
 
 ## Project Structure
