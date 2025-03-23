@@ -14,7 +14,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           version: '20'
-      - uses: pnpm/action-node@v2
+      - uses: pnpm/action-setup@v2
         with:
           version: 8
       - run: pnpm install
