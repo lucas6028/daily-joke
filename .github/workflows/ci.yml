@@ -1,4 +1,4 @@
-name: Cypress Tests
+name: CI - Prettier, ESLint, Cypress Test
 
 on:
   push:
@@ -6,7 +6,23 @@ on:
       - main
 
 jobs:
+  lint:
+    name: Lint Code
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          version: '20'
+      - uses: pnpm/action-node@v2
+        with:
+          version: 8
+      - run: pnpm install
+      - run: pnpm lint  # Runs ESLint
+      - run: pnpm check # Runs Prettier check
+
   cypress:
+    name: Run Cypress Tests
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_BASE_URL: 'https://daily-joke.vercel.app'
