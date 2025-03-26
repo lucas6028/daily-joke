@@ -3,12 +3,6 @@ import { createClient } from '@supabase/supabase-js'
 import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
-  // Check referer to ensure the request is from the same origin
-  const origin = request.headers.get('origin')
-  if (!origin || !origin.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
-    return NextResponse.json({ message: 'Unauthorized request origin', status: 403 })
-  }
-
   const searchParams = request.nextUrl.searchParams
   const id = parseInt(searchParams.get('id') || '1', 10)
 
@@ -28,6 +22,12 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  // Check origin to ensure the request is from the same origin
+  const origin = request.headers.get('origin')
+  if (!origin || !origin.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
+    return NextResponse.json({ message: 'Unauthorized request origin', status: 403 })
+  }
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!
