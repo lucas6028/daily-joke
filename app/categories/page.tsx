@@ -48,8 +48,8 @@ export default function Categories() {
         transition={{ duration: 0.5 }}
         className="text-center space-y-2 mb-8"
       >
-        <h1 className="text-3xl font-bold tracking-tight">Joke Categories</h1>
-        <p className="text-muted-foreground">Browse jokes by your favorite topics</p>
+        <h1 className="text-3xl font-bold tracking-tight">笑話分類</h1>
+        <p className="text-muted-foreground">按你最愛的主題瀏覽笑話，笑點隨你挑！</p>
       </motion.div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
