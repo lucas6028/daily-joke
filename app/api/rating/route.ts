@@ -24,6 +24,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   // Check origin to ensure the request is from the same origin
   const origin = request.headers.get('origin')
+  console.log('origin:', origin)
   if (!origin || !origin.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
     return NextResponse.json({ message: 'Unauthorized request origin', status: 403 })
   }
