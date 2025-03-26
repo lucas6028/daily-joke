@@ -4,8 +4,8 @@ import { supabase } from '@/lib/supabase'
 
 export async function GET(request: NextRequest) {
   // Check referer to ensure the request is from the same origin
-  const referer = request.headers.get('referer')
-  if (!referer || !referer.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
+  const origin = request.headers.get('origin')
+  if (!origin || !origin.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
     return NextResponse.json({ message: 'Unauthorized request origin', status: 403 })
   }
 
