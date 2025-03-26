@@ -36,8 +36,8 @@ export default function RandomJoke() {
           transition={{ duration: 0.5 }}
           className="space-y-4 text-center"
         >
-          <h1 className="text-3xl font-bold tracking-tight">Random Joke</h1>
-          <p className="text-muted-foreground">Click the button for a new random joke!</p>
+          <h1 className="text-3xl font-bold tracking-tight">隨機笑話</h1>
+          <p className="text-muted-foreground">點一下按鈕，獲取一個新的隨機笑話！</p>
           <Button size="lg" onClick={handleGetRandomJoke} disabled={isLoading} className="mx-auto">
             {isLoading ? (
               <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
