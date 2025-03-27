@@ -95,9 +95,9 @@ pnpm start
 
 ## API Routes
 
-- `GET /api/supabase/joke/single`: Fetches jokes from the Supabase database.
-- `POST /api/supabase/rating`: Inserts a new rating for a joke.
-- `GET /api/supabase/rating`: Fetches ratings for a specific joke.
+- `GET /api/joke/single`: Fetches jokes from the Supabase database.
+- `POST /api/rating`: Inserts a new rating for a joke.
+- `GET /api/rating`: Fetches ratings for a specific joke.
 
 ## Learn More
 
