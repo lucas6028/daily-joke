@@ -9,8 +9,5 @@ export async function GET(request: NextRequest) {
 
   res.setHeader('Set-Cookie', `csrfToken=${csrfToken}; Path=/; SameSite=Strict`)
 
-  return NextResponse.json({
-    message: 'Save csrf token to cookies successfully!',
-    status: 200,
-  })
+  return NextResponse.json({ csrfToken })
 }
