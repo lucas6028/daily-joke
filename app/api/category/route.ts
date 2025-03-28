@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error(`Error while fetching ${category} jokes from supabase`, error)
-      return NextResponse.json({ message: error }, { statuts: 500 })
+      return NextResponse.json({ message: 'Database error occurred' }, { statuts: 500 })
     }
 
     return NextResponse.json(jokes)
