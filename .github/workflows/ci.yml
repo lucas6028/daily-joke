@@ -24,6 +24,8 @@ jobs:
 
   cypress:
     name: Run Cypress Tests
+    # Only run this job if the deployment was successful
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     env:
       NEXT_PUBLIC_BASE_URL: 'https://daily-joke.vercel.app'
