@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Error while fetching jokes from supabase', error)
-      return NextResponse.json({ message: 'Database error occured' }, { statuts: 500 })
+      return NextResponse.json({ message: 'Database error occured' }, { status: 500 })
     }
 
     return NextResponse.json(ratings)
@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Error while insert new rating from supabase', error)
-      return NextResponse.json({ message: 'Database error occured.' }, { statuts: 500 })
+      return NextResponse.json({ message: 'Database error occured.' }, { status: 500 })
     }
 
     return NextResponse.json({
