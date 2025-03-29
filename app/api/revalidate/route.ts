@@ -16,6 +16,7 @@ export async function GET(request: NextRequest) {
     await revalidatePath(path)
     return NextResponse.json({ success: true, message: `Revalidated ${path}` })
   } catch (error) {
+    console.error('Error while revalidating page, ', error)
     return NextResponse.json({ message: 'Revalidate error occurred' }, { status: 500 })
   }
 }
