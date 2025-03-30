@@ -1,11 +1,13 @@
 describe('Display correct layout', () => {
-  it('should display correct title', () => {
+  beforeEach(() => {
     cy.visit(Cypress.env('categories'))
+  })
+
+  it('should display correct title', () => {
     cy.contains('h1', '笑話分類').should('be.visible')
   })
 
   it('should display correct sub title', () => {
-    cy.visit(Cypress.env('categories'))
     cy.contains('p', '按你最愛的主題瀏覽笑話，笑點隨你挑！').should('be.visible')
   })
 })
