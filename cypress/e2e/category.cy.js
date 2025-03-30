@@ -3,10 +3,12 @@ describe('Display correct layout', () => {
     cy.visit(Cypress.env('categories'))
   })
 
+  // Validate the title text: "Joke Categories"
   it('should display correct title', () => {
     cy.contains('h1', '笑話分類').should('be.visible')
   })
 
+  // Validate the subtitle text: "Browse jokes by your favorite topics"
   it('should display correct sub title', () => {
     cy.contains('p', '按你最愛的主題瀏覽笑話，笑點隨你挑！').should('be.visible')
   })
