@@ -11,11 +11,12 @@ export default defineConfig({
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     async setupNodeEvents(on, config) {},
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL,
   },
 
   env: {
-    BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+    home: 'https://daily-joke.vercel.app',
+    random: 'https://daily-joke.vercel.app/random',
+    categories: 'https://daily-joke.vercel.app/categories',
   },
 
   component: {
