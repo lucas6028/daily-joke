@@ -2,7 +2,7 @@ name: CI - Prettier, ESLint, Cypress Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "e2e_test" ]
   pull_request:
     branches: [ "main" ]
 
