@@ -1,39 +1,37 @@
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://daily-joke.vercel.app'
-
 describe('Test navigation in header', () => {
   it('should navigate to the random page', () => {
-    cy.visit(baseUrl)
+    cy.visit(Cypress.env('home'))
     cy.get('nav').contains('Random').click()
     cy.url().should('include', '/random')
   })
 })
 
 it('should navigate to the categories page', () => {
-  cy.visit(baseUrl)
+  cy.visit(Cypress.env('home'))
   cy.get('nav').contains('Categories').click()
   cy.url().should('include', '/categories')
 })
 
 it('should navigate to the home page', () => {
-  cy.visit(baseUrl + '/random')
+  cy.visit(Cypress.env('random'))
   cy.get('nav').contains('Home').click()
   cy.url().should('include', '/')
 })
 it('should navigate to the home page', () => {
-  cy.visit(baseUrl + '/random')
+  cy.visit(Cypress.env('random'))
   cy.get('nav').contains('Home').click()
   cy.url().should('include', '/')
 })
 
 describe('Change the theme of website', () => {
   it('should navigate to the home page', () => {
-    cy.visit(baseUrl + '/random')
+    cy.visit(Cypress.env('random'))
     cy.get('nav').contains('Home').click()
     cy.url().should('include', '/')
   })
 
   it('should change the theme to dark mode', () => {
-    cy.visit(baseUrl)
+    cy.visit(Cypress.env('home'))
 
     // Target the theme toggle button by its aria label instead
     cy.get(
