@@ -1,37 +1,35 @@
-const categories = [
-  'Dirty',
-  'Pun',
-  'Absurd',
-  'Misunderstanding',
-  'Technology',
-  'Animal',
-  'Idiom',
-  'Sports',
-  'Jingle',
-  'Programming',
-]
-
 describe('Display correct layout', () => {
   it('should display correct title', () => {
     cy.visit(Cypress.env('categories'))
-    cy.get('h1').should('exist').and('contain.text', '笑話分類')
+    cy.contains('h1', '笑話分類').should('be.visible')
   })
 
   it('should display correct sub title', () => {
     cy.visit(Cypress.env('categories'))
-    cy.get('p').should('exist').and('contain.text', '按你最愛的主題瀏覽笑話，笑點隨你挑！')
+    cy.contains('p', '按你最愛的主題瀏覽笑話，笑點隨你挑！').should('be.visible')
   })
 })
 
-/*
 describe('Category navigation test', () => {
+  const categories = [
+    'dirty',
+    'pun',
+    'absurd',
+    'misunderstanding',
+    'technology',
+    'animal',
+    'idiom',
+    'sports',
+    'jingle',
+    'programming',
+  ]
+
   it('should navigate to the correct category', () => {
-    cy.visit(baseUrl + '/categories')
+    cy.visit(Cypress.env('categories'))
     for (const category of categories) {
-      const cat = category.toLowerCase(category)
-      cy.get('h2').should('contain.text', cat).click({ multiple: true })
-      cy.url().should('include', '/' + cat)
+      cy.contains('h2', category).should('be.visible').click()
+      cy.url().should('include', '/' + category)
+      cy.go('back') // Navigate back to test the next category
     }
   })
 })
-*/
