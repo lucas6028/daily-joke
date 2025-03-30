@@ -45,6 +45,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Wait for 4 minutes
+        run: sleep 240s
+
       # Cache Cypress binary
       - name: Cache Cypress
         id: cache-cypress
