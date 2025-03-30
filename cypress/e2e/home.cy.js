@@ -12,4 +12,8 @@ describe('Display correct layout in home page', () => {
   it('should display correct sub title', () => {
     cy.contains('p', '帶給您歡樂與放鬆。讓您的一天從微笑開始！').should('be.visible')
   })
+
+  it('should display joke card', () => {
+    cy.get('.joke-card').should('exist').and('be.visible')
+  })
 })
