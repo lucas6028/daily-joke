@@ -4,23 +4,17 @@ describe('Test navigation in header', () => {
     cy.get('nav').contains('Random').click()
     cy.url().should('include', '/random')
   })
-})
+  it('should navigate to the categories page', () => {
+    cy.visit(Cypress.env('home'))
+    cy.get('nav').contains('Categories').click()
+    cy.url().should('include', '/categories')
+  })
 
-it('should navigate to the categories page', () => {
-  cy.visit(Cypress.env('home'))
-  cy.get('nav').contains('Categories').click()
-  cy.url().should('include', '/categories')
-})
-
-it('should navigate to the home page', () => {
-  cy.visit(Cypress.env('random'))
-  cy.get('nav').contains('Home').click()
-  cy.url().should('include', '/')
-})
-it('should navigate to the home page', () => {
-  cy.visit(Cypress.env('random'))
-  cy.get('nav').contains('Home').click()
-  cy.url().should('include', '/')
+  it('should navigate to the home page', () => {
+    cy.visit(Cypress.env('random'))
+    cy.get('nav').contains('Home').click()
+    cy.url().should('include', '/')
+  })
 })
 
 describe('Change the theme of website', () => {
