@@ -33,6 +33,7 @@ describe('Category navigation test', () => {
     for (const category of categories) {
       cy.contains('h2', category).should('be.visible').click()
       cy.url().should('include', '/' + category)
+      cy.get('.joke-card').should('exist').and('be.visible') // Check joke card exist
       cy.wait(500) // Allow page to fully load before navigating back
       cy.go('back') // Navigate back to test the next category
     }
