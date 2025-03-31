@@ -26,6 +26,7 @@ describe('Category navigation test', () => {
     'sports',
     'jingle',
     'programming',
+    'math',
   ]
 
   it('should navigate to the correct category', () => {
