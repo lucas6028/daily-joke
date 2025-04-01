@@ -1,6 +1,6 @@
 import type { Rating } from '@/types/rating'
 // import { Sparkles } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
+import { supabase } from '@/utils/supabase/client'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 
 export default async function Single({ params }: { params: { id: string } }) {
@@ -11,7 +11,6 @@ export default async function Single({ params }: { params: { id: string } }) {
   if (index < 1 || index > 68) {
     return <h1>Sorry. There is no joke with is ID.</h1>
   }
-  console.log('joke index:', index)
 
   // Fetch joke directly during server render
   const { data: jokeFromDB, error } = await supabase
