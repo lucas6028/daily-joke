@@ -1,4 +1,5 @@
 import type { Rating } from '@/types/rating'
+import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 
 async function getJoke(index: number) {
@@ -29,21 +30,20 @@ export default async function Single({ params }: { params: { id: string } }) {
   let errorMessage = null
 
   if (isNaN(index)) {
-    return <div>Invalid joke ID</div>
-  }
-  if (index < 1 || index > 75) {
-    return <h1>Sorry. There is no joke with is ID.</h1>
-  }
+    errorMessage = '此 ID 未符合標準'
+  } else if (index < 1 || index > 75) {
+    errorMessage = '抱歉。沒有此 ID 的笑話'
+  } else {
+    try {
+      joke = await getJoke(index)
 
-  try {
-    joke = await getJoke(index)
-
-    if (!joke) {
-      throw new Error('無法獲取笑話，請稍後再試')
+      if (!joke) {
+        throw new Error('無法獲取笑話，請稍後再試')
+      }
+    } catch (error) {
+      errorMessage = error instanceof Error ? error.message : '發生未知錯誤'
+      console.error('Error while fetching jokes:', error)
     }
-  } catch (error) {
-    errorMessage = error instanceof Error ? error.message : '發生未知錯誤'
-    console.error('Error while fetching jokes:', error)
   }
 
   // Calculate average rating on the server
@@ -60,7 +60,21 @@ export default async function Single({ params }: { params: { id: string } }) {
 
   return (
     <div className="space-y-10">
-      <section>{jokes && <JokeCardWrapper joke={jokes} />}</section>
+      <section>
+        {errorMessage ? (
+          <div className="p-8 border rounded-lg shadow-sm text-center">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <p className="text-lg font-semibold">笑話載入失敗</p>
+            <p className="text-muted-foreground mt-2">{errorMessage}</p>
+          </div>
+        ) : jokes ? (
+          <JokeCardWrapper joke={jokes} />
+        ) : (
+          <div className="p-8 border rounded-lg shadow-sm text-center">
+            <p className="text-muted-foreground">載入中...</p>
+          </div>
+        )}
+      </section>
     </div>
   )
 }
