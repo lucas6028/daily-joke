@@ -1,63 +1,66 @@
 import type { Rating } from '@/types/rating'
-// import { Sparkles } from 'lucide-react'
-import { supabase } from '@/utils/supabase/client'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
+
+async function getJoke(index: number) {
+  try {
+    // Fetch joke directly during server render
+    // Use absolute URL for server component
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    if (!baseUrl) {
+      throw new Error('Server configuration error: Base URL not defined')
+    }
+
+    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`)
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
+    }
+
+    return response.json()
+  } catch (error) {
+    console.error('Error fetching joke:', error)
+    return null
+  }
+}
 
 export default async function Single({ params }: { params: { id: string } }) {
   const index = parseInt(params.id)
+  let joke
+  let errorMessage = null
+
   if (isNaN(index)) {
     return <div>Invalid joke ID</div>
   }
-  if (index < 1 || index > 68) {
+  if (index < 1 || index > 75) {
     return <h1>Sorry. There is no joke with is ID.</h1>
   }
 
-  // Fetch joke directly during server render
-  const { data: jokeFromDB, error } = await supabase
-    .from('jokes')
-    .select(
-      `
-      *,
-      ratings:ratings(*)
-      `
-    )
-    .eq('id', index)
-    .limit(1)
-    .single()
+  try {
+    joke = await getJoke(index)
 
-  if (error) {
-    console.error('Error while fetching jokes from supabase', error)
-    return <h1>Sorry. There is no joke with is ID.</h1>
-    // You could return an error state here
+    if (!joke) {
+      throw new Error('無法獲取笑話，請稍後再試')
+    }
+  } catch (error) {
+    errorMessage = error instanceof Error ? error.message : '發生未知錯誤'
+    console.error('Error while fetching jokes:', error)
   }
 
   // Calculate average rating on the server
-  const joke = jokeFromDB
+  const jokes = joke
     ? {
-        ...jokeFromDB,
+        ...joke,
         averageRating:
-          jokeFromDB.ratings.length > 0
-            ? jokeFromDB.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) /
-              jokeFromDB.ratings.length
+          joke.ratings?.length > 0
+            ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) /
+              joke.ratings.length
             : 0,
       }
     : null
 
   return (
     <div className="space-y-10">
-      <section>
-        {/* <div className="text-center space-y-2 mb-6">
-          <h1 className="text-3xl font-bold tracking-tight">
-            <span className="inline-block">
-              <Sparkles className="h-8 w-8 inline-block mr-2 text-primary" />
-            </span>
-            每天一則精選笑話
-          </h1>
-          <p className="text-muted-foreground">帶給您歡樂與放鬆。讓您的一天從微笑開始！</p>
-        </div> */}
-
-        {joke && <JokeCardWrapper joke={joke} />}
-      </section>
+      <section>{jokes && <JokeCardWrapper joke={jokes} />}</section>
     </div>
   )
 }
