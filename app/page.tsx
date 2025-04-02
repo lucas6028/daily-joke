@@ -21,7 +21,12 @@ async function getJoke(): Promise<Joke | null> {
       throw new Error('Server configuration error: Base URL not defined')
     }
 
-    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
@@ -29,6 +34,10 @@ async function getJoke(): Promise<Joke | null> {
 
     return response.json()
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      console.error('Request timed out')
+      return null
+    }
     console.error('Error fetching joke:', error)
     return null
   }
