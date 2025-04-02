@@ -1,7 +1,7 @@
-import type { Rating } from '@/types/rating'
 import { Sparkles, AlertCircle } from 'lucide-react'
 import { getHashIndex } from '@/lib/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
+import { calculateJokeAverageRating } from '@/lib/calculateAverage'
 
 async function getJoke() {
   try {
@@ -47,11 +47,7 @@ export default async function Home() {
   const jokeOfTheDay = joke
     ? {
         ...joke,
-        averageRating:
-          joke.ratings?.length > 0
-            ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) /
-              joke.ratings.length
-            : 0,
+        averageRating: calculateJokeAverageRating(joke),
       }
     : null
 

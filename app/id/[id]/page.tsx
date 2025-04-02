@@ -1,7 +1,7 @@
-import type { Rating } from '@/types/rating'
 import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { Joke } from '@/types/joke'
+import { calculateJokeAverageRating } from '@/lib/calculateAverage'
 
 const MAX_JOKE_ID = 75
 const ERROR_MESSAGES = {
@@ -68,11 +68,7 @@ export default async function Single({ params }: { params: { id: string } }) {
   const jokes = joke
     ? {
         ...joke,
-        averageRating:
-          joke.ratings?.length > 0
-            ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) /
-              joke.ratings.length
-            : 0,
+        averageRating: calculateJokeAverageRating(joke),
       }
     : null
 
