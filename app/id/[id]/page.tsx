@@ -3,13 +3,13 @@ import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { Joke } from '@/types/joke'
 
-const MAX_JOKE_ID = 75;
+const MAX_JOKE_ID = 75
 const ERROR_MESSAGES = {
   INVALID_ID: '此 ID 未符合標準',
   OUT_OF_RANGE: '抱歉。沒有此 ID 的笑話',
   FETCH_FAILED: '無法獲取笑話，請稍後再試',
-  UNKNOWN: '發生未知錯誤'
-};
+  UNKNOWN: '發生未知錯誤',
+}
 
 async function getJoke(index: number): Promise<Joke | null> {
   try {
@@ -20,7 +20,12 @@ async function getJoke(index: number): Promise<Joke | null> {
       throw new Error('Server configuration error: Base URL not defined')
     }
 
-    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`)
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
@@ -28,6 +33,10 @@ async function getJoke(index: number): Promise<Joke | null> {
 
     return response.json()
   } catch (error) {
+    if (error instanceof DOMException && error.name === 'AbortError') {
+      console.error('Request timed out')
+      return null
+    }
     console.error('Error fetching joke:', error)
     return null
   }
