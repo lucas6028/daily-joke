@@ -1,8 +1,9 @@
 import type { Rating } from '@/types/rating'
 import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
+import { Joke } from '@/types/joke'
 
-async function getJoke(index: number) {
+async function getJoke(index: number): Promise<Joke | null> {
   try {
     // Fetch joke directly during server render
     // Use absolute URL for server component
@@ -26,7 +27,7 @@ async function getJoke(index: number) {
 
 export default async function Single({ params }: { params: { id: string } }) {
   const index = parseInt(params.id)
-  let joke
+  let joke: Joke | null = null
   let errorMessage = null
 
   if (isNaN(index)) {
