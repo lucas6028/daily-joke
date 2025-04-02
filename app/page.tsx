@@ -2,15 +2,16 @@ import { Sparkles, AlertCircle } from 'lucide-react'
 import { getHashIndex } from '@/lib/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { calculateJokeAverageRating } from '@/lib/calculateAverage'
+import { Joke } from '@/types/joke'
 
-async function getJoke() {
+async function getJoke(): Promise<Joke | null> {
   try {
     const index = getHashIndex()
     console.log('today index:', index)
 
     // Fetch joke directly during server render
     // Use absolute URL for server component
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    const baseUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
     if (!baseUrl) {
       throw new Error('Server configuration error: Base URL not defined')
     }
@@ -29,7 +30,7 @@ async function getJoke() {
 }
 
 export default async function Home() {
-  let joke
+  let joke: Joke | null = null
   let errorMessage = null
 
   try {
