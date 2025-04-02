@@ -4,6 +4,11 @@ import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { calculateJokeAverageRating } from '@/lib/calculateAverage'
 import { Joke } from '@/types/joke'
 
+const ERROR_MESSAGES = {
+  FETCH_FAILED: '無法獲取笑話，請稍後再試',
+  UNKNOWN: '發生未知錯誤',
+}
+
 async function getJoke(): Promise<Joke | null> {
   try {
     const index = getHashIndex()
@@ -37,10 +42,10 @@ export default async function Home() {
     joke = await getJoke()
 
     if (!joke) {
-      throw new Error('無法獲取笑話，請稍後再試')
+      throw new Error(ERROR_MESSAGES.FETCH_FAILED)
     }
   } catch (error) {
-    errorMessage = error instanceof Error ? error.message : '發生未知錯誤'
+    errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN
     console.error('Error while fetching jokes:', error)
   }
 
