@@ -3,6 +3,7 @@ import { getHashIndex } from '@/utils/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { calculateJokeAverageRating } from '@/lib/calculateAverage'
 import { Joke } from '@/types/joke'
+import { getJokeById } from '@/lib/getJoke'
 
 const ERROR_MESSAGES = {
   FETCH_FAILED: '無法獲取笑話，請稍後再試',
@@ -10,37 +11,8 @@ const ERROR_MESSAGES = {
 }
 
 async function getJoke(): Promise<Joke | null> {
-  try {
-    const index = getHashIndex()
-    console.log('today index:', index)
-
-    // Fetch joke directly during server render
-    // Use absolute URL for server component
-    const baseUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
-    if (!baseUrl) {
-      throw new Error('Server configuration error: Base URL not defined')
-    }
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
-    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
-      signal: controller.signal,
-    })
-    clearTimeout(timeoutId)
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
-    }
-
-    return response.json()
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') {
-      console.error('Request timed out')
-      return null
-    }
-    console.error('Error fetching joke:', error)
-    return null
-  }
+  const index = getHashIndex()
+  return getJokeById(index)
 }
 
 export default async function Home() {
