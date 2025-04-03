@@ -2,6 +2,7 @@ import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { Joke } from '@/types/joke'
 import { calculateJokeAverageRating } from '@/lib/calculateAverage'
+import { getJokeById } from '@/lib/getJoke'
 
 const MAX_JOKE_ID = 75
 const ERROR_MESSAGES = {
@@ -9,37 +10,6 @@ const ERROR_MESSAGES = {
   OUT_OF_RANGE: '抱歉。沒有此 ID 的笑話',
   FETCH_FAILED: '無法獲取笑話，請稍後再試',
   UNKNOWN: '發生未知錯誤',
-}
-
-async function getJoke(index: number): Promise<Joke | null> {
-  try {
-    // Fetch joke directly during server render
-    // Use absolute URL for server component
-    const baseUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
-    if (!baseUrl) {
-      throw new Error('Server configuration error: Base URL not defined')
-    }
-
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 5000)
-    const response = await fetch(`${baseUrl}/api/joke/single?id=${index}`, {
-      signal: controller.signal,
-    })
-    clearTimeout(timeoutId)
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
-    }
-
-    return response.json()
-  } catch (error) {
-    if (error instanceof DOMException && error.name === 'AbortError') {
-      console.error('Request timed out')
-      return null
-    }
-    console.error('Error fetching joke:', error)
-    return null
-  }
 }
 
 export default async function Single({ params }: { params: { id: string } }) {
@@ -53,7 +23,7 @@ export default async function Single({ params }: { params: { id: string } }) {
     errorMessage = ERROR_MESSAGES.OUT_OF_RANGE
   } else {
     try {
-      joke = await getJoke(index)
+      joke = await getJokeById(index)
 
       if (!joke) {
         throw new Error(ERROR_MESSAGES.FETCH_FAILED)
