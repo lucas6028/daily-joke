@@ -1,9 +1,12 @@
-// lib/getJoke.ts
 import { Joke } from '@/types/joke'
 
 const FETCH_TIMEOUT_MS = 5000
 
 export async function getJokeById(index: number): Promise<Joke | null> {
+  if (!Number.isInteger(index) || index <= 0) {
+    throw new Error('Invalid index: must be a non-negative integer')
+  }
+
   try {
     const baseUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
     if (!baseUrl) {
