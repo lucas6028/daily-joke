@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
   if (!category) {
     return NextResponse.json({ message: 'Invalid category' }, { status: 400 })
   }
+  const supabase = await createClient()
 
   try {
     const { data: jokes, error } = await supabase

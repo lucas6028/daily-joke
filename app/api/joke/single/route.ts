@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: 'Invalid joke id' }, { status: 400 })
   }
   const id = parseInt(paramID, 10)
+  const supabase = await createClient()
 
   try {
     const { data: jokes, error } = await supabase

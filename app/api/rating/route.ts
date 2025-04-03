@@ -1,9 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase/server'
+import { createClient } from '@/lib/supabase/server'
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const id = parseInt(searchParams.get('id') || '1', 10)
+  const supabase = await createClient()
 
   try {
     const { data: ratings, error } = await supabase.from('ratings').select('*').eq('joke_id', id)
@@ -21,6 +22,8 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
+  const supabase = await createClient()
+
   // Check origin to ensure the request is from the same origin
   const origin = request.headers.get('origin')
   if (!origin || !origin.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
