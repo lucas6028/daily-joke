@@ -4,7 +4,7 @@ const FETCH_TIMEOUT_MS = 5000
 
 export async function getJokeById(index: number): Promise<Joke | null> {
   if (!Number.isInteger(index) || index <= 0) {
-    throw new Error('Invalid index: must be a non-negative integer')
+    throw new Error('Invalid index: must be a positive integer')
   }
 
   try {
