@@ -23,7 +23,6 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
-
   // Check origin to ensure the request is from the same origin
   const origin = request.headers.get('origin')
   if (!origin || !origin.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
