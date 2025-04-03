@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import type { Joke } from '@/types/joke'
 import type { Rating } from '@/types/rating'
-import { supabase } from '@/utils/supabase/client'
+import { supabase } from '@/libs/supabase/client'
 
 interface JokeContextType {
   jokes: Joke[]
