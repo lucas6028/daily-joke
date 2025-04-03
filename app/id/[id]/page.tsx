@@ -1,7 +1,7 @@
 import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { Joke } from '@/types/joke'
-import { calculateJokeAverageRating } from '@/lib/calculateAverage'
+import { calculateJokeAverageRating } from '@/utils/calculateAverage'
 import { getJokeById } from '@/lib/getJoke'
 
 const MAX_JOKE_ID = 75
