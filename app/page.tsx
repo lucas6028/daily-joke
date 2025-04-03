@@ -1,7 +1,7 @@
 import { Sparkles, AlertCircle } from 'lucide-react'
 import { getHashIndex } from '@/utils/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
-import { calculateJokeAverageRating } from '@/lib/calculateAverage'
+import { calculateJokeAverageRating } from '@/utils/calculateAverage'
 import { Joke } from '@/types/joke'
 import { getJokeById } from '@/lib/getJoke'
 

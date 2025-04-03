@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { checkRateLimit, apiRateLimit, loginRateLimit } from '@/lib/rate-limit'
+import { checkRateLimit, apiRateLimit, loginRateLimit } from '@/utils/rate-limit'
 
 export async function middleware(request: NextRequest) {
   // Only apply rate limiting to API routes
