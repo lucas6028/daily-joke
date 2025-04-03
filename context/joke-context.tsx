@@ -3,7 +3,7 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import type { Joke } from '@/types/joke'
 import type { Rating } from '@/types/rating'
-import { supabase } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/client'
 
 interface JokeContextType {
   jokes: Joke[]
@@ -17,6 +17,7 @@ export function JokeProvider({ children }: { children: ReactNode }) {
   const [jokes, setJokes] = useState<Joke[]>([])
 
   useEffect(() => {
+    const supabase = createClient()
     const fetchJokesWithRatings = async () => {
       const { data: jokesWithRatings, error: jokesError } = await supabase.from('jokes').select(
         `
