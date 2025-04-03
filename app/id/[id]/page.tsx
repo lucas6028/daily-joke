@@ -10,6 +10,7 @@ const ERROR_MESSAGES = {
   OUT_OF_RANGE: '抱歉。沒有此 ID 的笑話',
   FETCH_FAILED: '無法獲取笑話，請稍後再試',
   UNKNOWN: '發生未知錯誤',
+  TITLE: '笑話載入失敗',
 }
 
 export default async function Single({ params }: { params: { id: string } }) {
@@ -48,7 +49,7 @@ export default async function Single({ params }: { params: { id: string } }) {
         {errorMessage ? (
           <div className="p-8 border rounded-lg shadow-sm text-center">
             <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
-            <p className="text-lg font-semibold">笑話載入失敗</p>
+            <p className="text-lg font-semibold">{ERROR_MESSAGES.TITLE}</p>
             <p className="text-muted-foreground mt-2">{errorMessage}</p>
           </div>
         ) : jokes ? (
