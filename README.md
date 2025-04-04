@@ -52,7 +52,9 @@ VAPID_PRIVATE_KEY=your-vapid-private-key
 UPSTASH_REDIS_REST_URL=your-upstash-redis-rest-url
 UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-rest-token
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
-
+CRON_SECRET=your-cron-secret
+CYPRESS_BASE_URL=http://localhost:3000
+BASE_URL=http://localhost:3000
 ```
 
 ### Running the Development Server
@@ -88,16 +90,18 @@ pnpm start
 - `context`: Contains React context for managing global state.
 - `data`: Contains mock data for jokes.
 - `hooks`: Contains custom React hooks.
-- `lib`: Contains utility functions and Supabase client setup.
+- `lib`: Contains Supabase client setup and get joke function.
 - `public`: Contains static assets.
 - `styles/`: Contains global CSS styles.
 - `types`: Contains TypeScript type definitions.
+- `utils`: Contains utility functions.
 
 ## API Routes
 
 - `GET /api/joke/single`: Fetches jokes from the Supabase database.
 - `POST /api/rating`: Inserts a new rating for a joke.
 - `GET /api/rating`: Fetches ratings for a specific joke.
+- `GET /api/revalidate`: Revalidate a page (default to home page).
 
 ## Learn More
 
