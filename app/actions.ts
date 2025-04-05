@@ -1,13 +1,7 @@
 'use server'
 
 import webpush from 'web-push'
-import { createClient } from '@supabase/supabase-js'
-
-// Initialize Supabase client
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-)
+import { createClient } from '@/lib/supabase/server'
 
 // Define the custom PushSubscription type expected by web-push
 interface WebPushSubscription {
@@ -41,6 +35,7 @@ export async function subscribeUser(sub: WebPushSubscription) {
     }
 
     // Store in Supabase
+    const supabase = await createClient()
     const { data, error } = await supabase
       .from('push_subscriptions')
       .upsert(
@@ -70,6 +65,7 @@ export async function subscribeUser(sub: WebPushSubscription) {
 
 export async function unsubscribeUser(endpoint: string) {
   try {
+    const supabase = await createClient()
     const { error } = await supabase.from('push_subscriptions').delete().eq('endpoint', endpoint)
 
     if (error) {
