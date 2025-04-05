@@ -1,67 +1,70 @@
-// const CACHE_NAME = "daily-joke-v1";
-// const urlsToCache = [
-//   "/",
-//   "/favicon.svg",
-//   "/icon-192x192.png",
-//   "/icon-512x512.png",
-// ];
+const CACHE_NAME = 'daily-joke-v1'
+const urlsToCache = [
+  '/',
+  '/favicon.svg',
+  '/icon-192x192.png',
+  '/icon-512x512.png',
+  'icon-svg.svg',
+  '/desktop_screenshot.png',
+  '/mobile_screenshot.png',
+]
 
-// // Install event - cache assets
-// self.addEventListener("install", (event) => {
-//   event.waitUntil(
-//     caches.open(CACHE_NAME).then((cache) => {
-//       console.log("Cache opened");
-//       return cache.addAll(urlsToCache);
-//     })
-//   );
-// });
+// Install event - cache assets
+self.addEventListener('install', (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log('Cache opened')
+      return cache.addAll(urlsToCache)
+    })
+  )
+})
 
-// // Activate event - clean up old caches
-// self.addEventListener("activate", (event) => {
-//   event.waitUntil(
-//     caches.keys().then((cacheNames) => {
-//       return Promise.all(
-//         cacheNames.map((cacheName) => {
-//           if (cacheName !== CACHE_NAME) {
-//             return caches.delete(cacheName);
-//           }
-//         })
-//       );
-//     })
-//   );
-// });
+// Activate event - clean up old caches
+self.addEventListener('activate', (event) => {
+  event.waitUntil(
+    caches.keys().then((cacheNames) => {
+      return Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            return caches.delete(cacheName)
+          }
+        })
+      )
+    })
+  )
+})
 
-// // Fetch event - serve from cache or network
-// self.addEventListener("fetch", (event) => {
-//   event.respondWith(
-//     caches.match(event.request).then((response) => {
-//       // Return cached response if found
-//       if (response) {
-//         return response;
-//       }
+// Fetch event - serve from cache or network
+self.addEventListener('fetch', (event) => {
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      // Return cached response if found
+      if (response) {
+        return response
+      }
 
-//       // Clone the request
-//       const fetchRequest = event.request.clone();
+      // Clone the request
+      const fetchRequest = event.request.clone()
 
-//       // Make network request and cache the response
-//       return fetch(fetchRequest).then((response) => {
-//         // Check if we received a valid response
-//         if (!response || response.status !== 200 || response.type !== "basic") {
-//           return response;
-//         }
+      // Make network request and cache the response
+      return fetch(fetchRequest).then((response) => {
+        // Check if we received a valid response
+        if (!response || response.status !== 200 || response.type !== 'basic') {
+          return response
+        }
 
-//         // Clone the response
-//         const responseToCache = response.clone();
+        // Clone the response
+        const responseToCache = response.clone()
 
-//         caches.open(CACHE_NAME).then((cache) => {
-//           cache.put(event.request, responseToCache);
-//         });
+        caches.open(CACHE_NAME).then((cache) => {
+          cache.put(event.request, responseToCache)
+        })
 
-//         return response;
-//       });
-//     })
-//   );
-// });
+        return response
+      })
+    })
+  )
+})
 
 self.addEventListener('push', function (event) {
   if (event.data) {
@@ -83,6 +86,5 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
   console.log('Notification click received.')
   event.notification.close()
-  // event.waitUntil(clients.openWindow('<https://daily-joke.vercel.app>'))
   event.waitUntil(clients.openWindow('/'))
 })
