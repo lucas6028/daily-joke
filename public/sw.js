@@ -4,7 +4,7 @@ const urlsToCache = [
   '/favicon.svg',
   '/icon-192x192.png',
   '/icon-512x512.png',
-  'icon-svg.svg',
+  '/icon-svg.svg',
   '/desktop_screenshot.png',
   '/mobile_screenshot.png',
 ]
