@@ -37,32 +37,35 @@ self.addEventListener('activate', (event) => {
 // Fetch event - serve from cache or network
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Return cached response if found
-      if (response) {
-        return response
-      }
+    // Only cache GET requests to same origin or specific static assets
+    !event.request.url.includes('/api/') && event.request.method === 'GET'
+      ? caches.match(event.request).then((response) => {
+          // Return cached response if found
+          if (response) {
+            return response
+          }
 
-      // Clone the request
-      const fetchRequest = event.request.clone()
+          // Clone the request
+          const fetchRequest = event.request.clone()
 
-      // Make network request and cache the response
-      return fetch(fetchRequest).then((response) => {
-        // Check if we received a valid response
-        if (!response || response.status !== 200 || response.type !== 'basic') {
-          return response
-        }
+          // Make network request and cache the response
+          return fetch(fetchRequest).then((response) => {
+            // Check if we received a valid response
+            if (!response || response.status !== 200 || response.type !== 'basic') {
+              return response
+            }
 
-        // Clone the response
-        const responseToCache = response.clone()
+            // Clone the response
+            const responseToCache = response.clone()
 
-        caches.open(CACHE_NAME).then((cache) => {
-          cache.put(event.request, responseToCache)
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseToCache)
+            })
+
+            return response
+          })
         })
-
-        return response
-      })
-    })
+      : fetch(event.request) // Don't cache API calls
   )
 })
 
