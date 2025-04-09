@@ -2,8 +2,8 @@
 
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 import type { Joke } from '@/types/joke'
-import type { Rating } from '@/types/rating'
 import { createClient } from '@/lib/supabase/client'
+import { calculateJokeAverageRating } from '@/utils/calculateAverage'
 
 interface JokeContextType {
   jokes: Joke[]
@@ -32,11 +32,7 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
 
       const jokesWithAverageRatings = jokesWithRatings.map((joke: Joke) => ({
         ...joke,
-        averageRating:
-          joke.ratings.length > 0
-            ? joke.ratings.reduce((prev: number, curr: Rating) => prev + curr.rating, 0) /
-              joke.ratings.length
-            : 0,
+        averageRating: calculateJokeAverageRating(joke),
       }))
 
       setJokes(jokesWithAverageRatings)
