@@ -31,6 +31,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
     misunderstanding: '😵‍💫',
     idiom: '🈸',
     jingle: '🔔',
+    stock: '📉',
   }
 
   useEffect(() => {
