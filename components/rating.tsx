@@ -5,7 +5,7 @@ import { Star } from 'lucide-react'
 import { motion } from 'framer-motion'
 
 interface RatingProps {
-  initialRating: number
+  readonly initialRating: number
   onRate: (rating: number) => void
 }
 
