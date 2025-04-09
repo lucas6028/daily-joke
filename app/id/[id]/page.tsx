@@ -13,7 +13,7 @@ const ERROR_MESSAGES = {
   TITLE: '笑話載入失敗',
 }
 
-export default async function Single({ params }: { params: { id: string } }) {
+export default async function Single({ params }: { params: { readonly id: string } }) {
   const index = parseInt(params.id)
   let joke: Joke | null = null
   let errorMessage = null
