@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
+export default function CategoryPage({ params }: { params: { readonly category: string } }) {
   const { jokes } = useJokeContext()
   const [categoryJokes, setCategoryJokes] = useState<Joke[]>([])
 
