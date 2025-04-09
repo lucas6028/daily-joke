@@ -66,7 +66,7 @@ export default function Categories() {
                 <CardContent className="p-6 flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="text-4xl" aria-hidden="true">
-                      {categoryEmojis[category] || '😄'}
+                      {categoryEmojis[category] ?? '😄'}
                     </div>
                     <div>
                       <h2 className="text-xl font-semibold capitalize">{category}</h2>

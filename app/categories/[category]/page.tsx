@@ -58,7 +58,7 @@ export default function CategoryPage({ params }: { params: { readonly category: 
           className="flex items-center gap-2"
         >
           <span className="text-3xl" aria-hidden="true">
-            {categoryEmojis[params.category] || '😄'}
+            {categoryEmojis[params.category] ?? '😄'}
           </span>
           <h1 className="text-3xl font-bold tracking-tight capitalize">{params.category} Jokes</h1>
         </motion.div>
