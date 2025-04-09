@@ -5,7 +5,7 @@ import type { Joke } from '@/types/joke'
 import JokeCard from '@/components/joke-card'
 import { motion } from 'framer-motion'
 
-export default function JokeCardWrapper({ joke }: { joke: Joke }) {
+export default function JokeCardWrapper({ joke }: { readonly joke: Joke }) {
   const [jokeState, setJokeState] = useState<Joke>(joke)
 
   const refreshRatings = async (rating: number) => {
