@@ -38,6 +38,7 @@ export default function Categories() {
     misunderstanding: '😵‍💫',
     idiom: '🈸',
     jingle: '🔔',
+    stock: '📉',
   }
 
   return (
