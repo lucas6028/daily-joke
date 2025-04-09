@@ -26,7 +26,7 @@ export default function Rating({ initialRating, onRate }: RatingProps) {
           <motion.button
             key={index}
             className={`text-2xl focus:outline-none ${
-              ratingValue <= (hover != 0 ? hover : rating) ? 'text-yellow-400' : 'text-gray-300'
+              ratingValue <= (hover || rating) ? 'text-yellow-400' : 'text-gray-300'
             }`}
             onClick={() => handleRate(ratingValue)}
             onMouseEnter={() => setHover(ratingValue)}
@@ -36,7 +36,7 @@ export default function Rating({ initialRating, onRate }: RatingProps) {
           >
             <Star
               className="w-6 h-6"
-              fill={ratingValue <= (hover != 0 ? hover : rating) ? 'currentColor' : 'none'}
+              fill={ratingValue <= (hover || rating) ? 'currentColor' : 'none'}
             />
           </motion.button>
         )
