@@ -12,7 +12,7 @@ import Rating from '@/components/rating'
 import { useJokeContext } from '@/context/joke-context'
 
 interface JokeCardProps {
-  joke: Joke
+  readonly joke: Joke
   onRatingSubmitted?: (rating: number) => void
 }
 
