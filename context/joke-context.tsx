@@ -13,7 +13,7 @@ interface JokeContextType {
 
 const JokeContext = createContext<JokeContextType | undefined>(undefined)
 
-export function JokeProvider({ children }: { children: ReactNode }) {
+export function JokeProvider({ children }: { readonly children: ReactNode }) {
   const [jokes, setJokes] = useState<Joke[]>([])
 
   useEffect(() => {
