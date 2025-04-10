@@ -7,7 +7,7 @@ import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 
-export default function Error({
+export default function ErrorPage({
   error,
   reset,
 }: {
