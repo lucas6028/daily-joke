@@ -16,7 +16,7 @@ interface JokeCardProps {
   onRatingSubmitted?: (rating: number) => void
 }
 
-export default function JokeCard({ joke, onRatingSubmitted }: JokeCardProps) {
+export default function JokeCard({ joke, onRatingSubmitted }: Readonly<JokeCardProps>) {
   const [copied, setCopied] = useState(false)
   const { rateJoke } = useJokeContext()
 
