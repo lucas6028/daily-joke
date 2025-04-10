@@ -9,7 +9,7 @@ interface RatingProps {
   onRate: (rating: number) => void
 }
 
-export default function Rating({ initialRating, onRate }: RatingProps) {
+export default function Rating({ initialRating, onRate }: Readonly<RatingProps>) {
   const [rating, setRating] = useState(initialRating)
   const [hover, setHover] = useState(0)
 
