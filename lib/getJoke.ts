@@ -8,7 +8,7 @@ export async function getJokeById(index: number): Promise<Joke | null> {
   }
 
   try {
-    const baseUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL
+    const baseUrl = process.env.BASE_URL ?? process.env.NEXT_PUBLIC_BASE_URL
     if (!baseUrl) {
       throw new Error('Server configuration error: Base URL not defined')
     }
