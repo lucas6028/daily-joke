@@ -11,7 +11,7 @@ export default function ErrorPage({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
+  readonly error: Error & { digest?: string }
   reset: () => void
 }) {
   useEffect(() => {
