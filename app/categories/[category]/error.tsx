@@ -10,7 +10,7 @@ export default function CategoryError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string }
+  readonly error: Error & { digest?: string }
   reset: () => void
 }) {
   useEffect(() => {
