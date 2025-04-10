@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   // Path to revalidate (default to home page '/')
-  const path = request.nextUrl.searchParams.get('path') || '/'
+  const path = request.nextUrl.searchParams.get('path') ?? '/'
 
   try {
     await revalidatePath(path)
