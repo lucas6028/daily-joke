@@ -11,7 +11,7 @@ export default function CategoryError({
   reset,
 }: {
   readonly error: Error & { digest?: string }
-  reset: () => void
+  readonly reset: () => void
 }) {
   useEffect(() => {
     // Log the error to an error reporting service
