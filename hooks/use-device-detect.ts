@@ -40,7 +40,9 @@ export function useDeviceDetect(): DeviceInfo {
 
     // Detect device type
     const userAgent = navigator.userAgent
-    const mobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(userAgent)
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      userAgent
+    )
     const tablet = /(tablet|ipad|playbook|silk)|(android(?!.*mobi))/i.test(userAgent)
 
     // Detect OS
@@ -61,13 +63,14 @@ export function useDeviceDetect(): DeviceInfo {
     // Determine if the app can be installed
     // This is a simplified check - in reality you'd use the beforeinstallprompt event
     const canInstall = !isStandalone && (isAndroid || isIOS)
-    const deviceType = tablet ? 'tablet' : mobile ? 'mobile' : 'desktop'
+    const mobile = isMobile ? 'mobile' : 'desktop'
+    const deviceType = tablet ? 'tablet' : mobile
 
     setDeviceInfo({
       deviceType,
-      isMobile: mobile && !tablet,
+      isMobile: isMobile && !tablet,
       isTablet: tablet,
-      isDesktop: !mobile && !tablet,
+      isDesktop: !isMobile && !tablet,
       os,
       isIOS,
       isAndroid,
