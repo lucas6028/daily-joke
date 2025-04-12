@@ -61,9 +61,10 @@ export function useDeviceDetect(): DeviceInfo {
     // Determine if the app can be installed
     // This is a simplified check - in reality you'd use the beforeinstallprompt event
     const canInstall = !isStandalone && (isAndroid || isIOS)
+    const deviceType = tablet ? 'tablet' : mobile ? 'mobile' : 'desktop'
 
     setDeviceInfo({
-      deviceType: tablet ? 'tablet' : mobile ? 'mobile' : 'desktop',
+      deviceType,
       isMobile: mobile && !tablet,
       isTablet: tablet,
       isDesktop: !mobile && !tablet,
