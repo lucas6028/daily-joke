@@ -54,4 +54,18 @@ describe('getHashIndex', () => {
 
     expect(januaryResult).not.toBe(decemberResult)
   })
+
+  it('should handle edge dates correctly', () => {
+    // Test with minimum date value that JS can reliably handle
+    jest.setSystemTime(new Date('1900-01-01'))
+    const minDateResult = getHashIndex()
+    expect(minDateResult).toBeGreaterThanOrEqual(1)
+    expect(minDateResult).toBeLessThanOrEqual(68)
+
+    // Test with far future date
+    jest.setSystemTime(new Date('2100-12-31'))
+    const futureDateResult = getHashIndex()
+    expect(futureDateResult).toBeGreaterThanOrEqual(1)
+    expect(futureDateResult).toBeLessThanOrEqual(68)
+  })
 })
