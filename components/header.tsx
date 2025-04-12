@@ -50,7 +50,7 @@ export default function Header() {
           {navItems.map((item) => {
             const isActive =
               pathname === item.href ||
-              (item.href !== '/' && pathname && pathname.startsWith(item.href))
+              (item.href !== '/' && pathname?.startsWith(item.href))
 
             return (
               <Link key={item.name} href={item.href}>
