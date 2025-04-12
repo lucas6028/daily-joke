@@ -1,6 +1,6 @@
 import { calculateJokeAverageRating } from '../utils/calculateAverage'
 import { Joke } from '@/types/joke'
-import { expect } from '@jest/globals'
+import { expect, it } from '@jest/globals'
 
 // Add at the beginning of the file:
 function createTestJoke(ratings: { id: string; joke_id: string; rating: number }[] = []): Joke {
@@ -14,14 +14,12 @@ function createTestJoke(ratings: { id: string; joke_id: string; rating: number }
 }
 
 describe('calculateJokeAverageRating', () => {
-  it('should return 0 when joke is undefined', () => {
-    // @ts-expect-error - intentionally passing undefined for test
-    expect(calculateJokeAverageRating(undefined)).toBe(0)
-  })
-
-  it('should return 0 when joke is null', () => {
-    // @ts-expect-error - intentionally passing null for test
-    expect(calculateJokeAverageRating(null)).toBe(0)
+  it.each([
+    ['undefined', undefined],
+    ['null', null],
+  ])('should return 0 when joke is %s', (_, jokeValue) => {
+    // @ts-expect-error - intentionally passing null/undefined for test
+    expect(calculateJokeAverageRating(jokeValue)).toBe(0)
   })
 
   it('should return 0 when joke has no ratings', () => {
