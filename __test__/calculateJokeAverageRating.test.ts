@@ -2,7 +2,6 @@ import { calculateJokeAverageRating } from '../utils/calculateAverage'
 import { Joke } from '@/types/joke'
 import { expect, it } from '@jest/globals'
 
-// Add at the beginning of the file:
 function createTestJoke(ratings: { id: string; joke_id: string; rating: number }[] = []): Joke {
   return {
     id: '1',
