@@ -47,4 +47,14 @@ describe('calculateJokeAverageRating', () => {
     ])
     expect(calculateJokeAverageRating(joke)).toBe(2.5) // (2 + 3) / 2 = 2.5
   })
+
+  it('should handle a large number of ratings correctly', () => {
+    const manyRatings = Array.from({ length: 100 }, (_, i) => ({
+      id: i.toString(),
+      joke_id: '1',
+      rating: 3,
+    }))
+    const joke = createTestJoke(manyRatings)
+    expect(calculateJokeAverageRating(joke)).toBe(3)
+  })
 })
