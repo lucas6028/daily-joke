@@ -68,4 +68,56 @@ describe('getHashIndex', () => {
     expect(futureDateResult).toBeGreaterThanOrEqual(1)
     expect(futureDateResult).toBeLessThanOrEqual(68)
   })
+
+  it('should handle time zone differences correctly', () => {
+    // Set the system time to a specific date in UTC
+    jest.setSystemTime(new Date('2023-01-01T00:00:00Z'))
+    const utcResult = getHashIndex()
+
+    // Set the system time to the same date in a different time zone
+    jest.setSystemTime(new Date('2023-01-01T00:00:00-0500')) // UTC-5
+    const estResult = getHashIndex()
+
+    expect(utcResult).toBe(estResult)
+  })
+
+  it('should handle daylight saving time changes correctly', () => {
+    // Set the system time to a date before the DST change
+    jest.setSystemTime(new Date('2023-03-12T01:00:00-0500')) // Before DST change
+    const preDstResult = getHashIndex()
+
+    // Set the system time to a date after the DST change
+    jest.setSystemTime(new Date('2023-03-12T03:00:00-0400')) // After DST change
+    const postDstResult = getHashIndex()
+
+    expect(preDstResult).toBe(postDstResult)
+  })
+
+  it('should handle edge cases with time zones correctly', () => {
+    // Set the system time to a date in UTC
+    jest.setSystemTime(new Date('2023-01-01T00:00:00Z'))
+    const utcResult = getHashIndex()
+
+    // Set the system time to the same date in a different time zone
+    jest.setSystemTime(new Date('2023-01-01T00:00:00+0200')) // UTC+2
+    const cetResult = getHashIndex()
+
+    expect(utcResult).toBe(cetResult)
+  })
+
+  it('should handle extreme future dates correctly', () => {
+    // Set the system time to a far future date
+    jest.setSystemTime(new Date('9999-12-31'))
+    const futureDateResult = getHashIndex()
+    expect(futureDateResult).toBeGreaterThanOrEqual(1)
+    expect(futureDateResult).toBeLessThanOrEqual(68)
+  })
+
+  it('should handle extreme past dates correctly', () => {
+    // Set the system time to a far past date
+    jest.setSystemTime(new Date('0001-01-01'))
+    const pastDateResult = getHashIndex()
+    expect(pastDateResult).toBeGreaterThanOrEqual(1)
+    expect(pastDateResult).toBeLessThanOrEqual(68)
+  })
 })
