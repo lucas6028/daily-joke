@@ -57,4 +57,36 @@ describe('calculateJokeAverageRating', () => {
     const joke = createTestJoke(manyRatings)
     expect(calculateJokeAverageRating(joke)).toBe(3)
   })
+
+  it('should handle negative ratings correctly', () => {
+    const joke = createTestJoke([
+      { id: '1', joke_id: '1', rating: -1 },
+      { id: '2', joke_id: '1', rating: 1 },
+    ])
+    expect(calculateJokeAverageRating(joke)).toBe(0) // (-1 + 1) / 2 = 0
+  })
+
+  it('should handle extremely high ratings correctly', () => {
+    const joke = createTestJoke([
+      { id: '1', joke_id: '1', rating: 1000 },
+      { id: '2', joke_id: '1', rating: 2000 },
+    ])
+    expect(calculateJokeAverageRating(joke)).toBe(1500) // (1000 + 2000) / 2 = 1500
+  })
+
+  it('should handle boundary values (min/max ratings)', () => {
+    const joke = createTestJoke([
+      { id: '1', joke_id: '1', rating: 0 },
+      { id: '2', joke_id: '1', rating: 5 },
+    ])
+    expect(calculateJokeAverageRating(joke)).toBe(2.5) // (0 + 5) / 2 = 2.5
+  })
+
+  it('should handle mixed positive and negative ratings correctly', () => {
+    const joke = createTestJoke([
+      { id: '1', joke_id: '1', rating: -2 },
+      { id: '2', joke_id: '1', rating: 4 },
+    ])
+    expect(calculateJokeAverageRating(joke)).toBe(1) // (-2 + 4) / 2 = 1
+  })
 })
