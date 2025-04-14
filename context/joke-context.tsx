@@ -14,33 +14,36 @@ interface JokeContextType {
 
 const JokeContext = createContext<JokeContextType | undefined>(undefined)
 
+// Function moved outside of the component to reduce nesting
+async function fetchJokesWithRatings() {
+  const supabase = createClient()
+  const { data: jokesWithRatings, error: jokesError } = await supabase.from('jokes').select(
+    `
+      *,
+      ratings:ratings(*)
+      `
+  )
+
+  if (jokesError) {
+    console.error('Error fetching jokes:', jokesError.message)
+    return []
+  }
+
+  return jokesWithRatings.map((joke: Joke) => ({
+    ...joke,
+    averageRating: calculateJokeAverageRating(joke),
+  }))
+}
+
 export function JokeProvider({ children }: { readonly children: ReactNode }) {
   const [jokes, setJokes] = useState<Joke[]>([])
   const { csrfToken } = useCSRF()
 
   useEffect(() => {
-    const supabase = createClient()
-    const fetchJokesWithRatings = async () => {
-      const { data: jokesWithRatings, error: jokesError } = await supabase.from('jokes').select(
-        `
-          *,
-          ratings:ratings(*)
-          `
-      )
-      if (jokesError) {
-        console.error('Error fetching jokes:', jokesError.message)
-        return
-      }
-
-      const jokesWithAverageRatings = jokesWithRatings.map((joke: Joke) => ({
-        ...joke,
-        averageRating: calculateJokeAverageRating(joke),
-      }))
-
+    // Using the extracted function
+    fetchJokesWithRatings().then((jokesWithAverageRatings) => {
       setJokes(jokesWithAverageRatings)
-    }
-
-    fetchJokesWithRatings()
+    })
   }, [])
 
   // Use useMemo to prevent the context value from being recreated on every render
