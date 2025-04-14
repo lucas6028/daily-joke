@@ -164,7 +164,7 @@ export function NotificationBanner() {
             } else {
               toast({
                 title: 'Error enabling notifications',
-                description: result.error || 'Failed to enable notifications.',
+                description: result.error ?? 'Failed to enable notifications.',
                 variant: 'destructive',
               })
             }
