@@ -5,6 +5,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import Header from '@/components/header'
 import { JokeProvider } from '@/context/joke-context'
+import { CSRFProvider } from '@/context/csrf-context'
 import { Toaster } from '@/components/ui/toaster'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { NotificationBanner } from '@/components/notification-banner'
@@ -46,21 +47,23 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <JokeProvider>
-            <div className="min-h-screen bg-background flex flex-col">
-              <Header />
-              <main className="flex-1 container max-w-4xl mx-auto px-4 py-6">{children}</main>
-              <footer className="border-t py-4">
-                <div className="container max-w-4xl mx-auto px-4 text-center text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} Daily Joke. All jokes are meant for entertainment
-                  purposes.
-                </div>
-              </footer>
-            </div>
-            <NotificationBanner />
-            <Toaster />
-            <ServiceWorkerRegistration />
-          </JokeProvider>
+          <CSRFProvider>
+            <JokeProvider>
+              <div className="min-h-screen bg-background flex flex-col">
+                <Header />
+                <main className="flex-1 container max-w-4xl mx-auto px-4 py-6">{children}</main>
+                <footer className="border-t py-4">
+                  <div className="container max-w-4xl mx-auto px-4 text-center text-sm text-muted-foreground">
+                    © {new Date().getFullYear()} Daily Joke. All jokes are meant for entertainment
+                    purposes.
+                  </div>
+                </footer>
+              </div>
+              <NotificationBanner />
+              <Toaster />
+              <ServiceWorkerRegistration />
+            </JokeProvider>
+          </CSRFProvider>
         </ThemeProvider>
         <GoogleAnalytics gaId="G-Z9JQ13JX7T" />
       </body>
