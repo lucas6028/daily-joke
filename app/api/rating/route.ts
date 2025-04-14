@@ -34,7 +34,12 @@ export async function POST(request: NextRequest) {
   // Verify CSRF token
   const csrfToken = request.headers.get('x-csrf-token')
   if (!csrfToken || !verifyCSRFToken(csrfToken)) {
-    return NextResponse.json({ message: 'Invalid CSRF token' }, { status: 403 })
+    return NextResponse.json(
+      {
+        message: !csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token',
+      },
+      { status: 403 }
+    )
   }
 
   const { joke_id, rating } = await request.json()
