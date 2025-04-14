@@ -1,6 +1,6 @@
 'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react'
+import React, { createContext, useContext, useEffect, useState, useMemo } from 'react'
 
 interface CSRFContextType {
   csrfToken: string | null
@@ -33,5 +33,10 @@ export function CSRFProvider({ children }: { readonly children: React.ReactNode 
     fetchCSRFToken()
   }, [])
 
-  return <CSRFContext.Provider value={{ csrfToken, loading }}>{children}</CSRFContext.Provider>
+  // Use useMemo to prevent the context value from being recreated on every render
+  const contextValue = useMemo(() => {
+    return { csrfToken, loading }
+  }, [csrfToken, loading])
+
+  return <CSRFContext.Provider value={contextValue}>{children}</CSRFContext.Provider>
 }
