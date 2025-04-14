@@ -8,6 +8,7 @@ import { toast } from '@/components/ui/use-toast'
 import { useDeviceDetect } from '@/hooks/use-device-detect'
 import { motion, AnimatePresence } from 'framer-motion'
 import { subscribeUser } from '@/app/actions'
+import { useCSRF } from '@/context/csrf-context'
 
 function urlBase64ToUint8Array(base64String: string) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
@@ -27,6 +28,7 @@ export function NotificationBanner() {
   const [showIOSInstructions, setShowIOSInstructions] = useState(false)
   const [hasSubscription, setHasSubscription] = useState(false)
   const { isMobile, isStandalone, isIOS } = useDeviceDetect()
+  const { csrfToken } = useCSRF()
 
   // Correctly detect PWA standalone mode
   useEffect(() => {
@@ -134,6 +136,17 @@ export function NotificationBanner() {
               return
             }
 
+            // Check if CSRF token is available
+            if (!csrfToken) {
+              console.error('CSRF token is not available')
+              toast({
+                title: 'Error enabling notifications',
+                description: 'Could not securely enable notifications. Please try again later.',
+                variant: 'destructive',
+              })
+              return
+            }
+
             const sub = await registration.pushManager.subscribe({
               userVisibleOnly: true,
               applicationServerKey: urlBase64ToUint8Array(process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY),
@@ -142,11 +155,19 @@ export function NotificationBanner() {
             // Get serialized subscription
             const serializedSub = JSON.parse(JSON.stringify(sub))
 
-            // Pass to server action
-            await subscribeUser(serializedSub)
+            // Pass to server action with CSRF token
+            const result = await subscribeUser(serializedSub, csrfToken)
 
-            // Update subscription status
-            setHasSubscription(true)
+            if (result.success) {
+              // Update subscription status
+              setHasSubscription(true)
+            } else {
+              toast({
+                title: 'Error enabling notifications',
+                description: result.error || 'Failed to enable notifications.',
+                variant: 'destructive',
+              })
+            }
           } else {
             toast({
               title: 'Notification permission denied',
