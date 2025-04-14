@@ -1,6 +1,6 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from 'react'
 import type { Joke } from '@/types/joke'
 import { createClient } from '@/lib/supabase/client'
 import { calculateJokeAverageRating } from '@/utils/calculateAverage'
@@ -43,58 +43,59 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
     fetchJokesWithRatings()
   }, [])
 
-  const getRandomJoke = () => {
-    const randomIndex = Math.floor(Math.random() * jokes.length)
-    return jokes[randomIndex]
-  }
-
-  const rateJoke = (id: string, rating: number) => {
-    const newRating = {
-      rating,
-      joke_id: id,
+  // Use useMemo to prevent the context value from being recreated on every render
+  const contextValue = useMemo(() => {
+    const getRandomJoke = () => {
+      const randomIndex = Math.floor(Math.random() * jokes.length)
+      return jokes[randomIndex]
     }
 
-    setJokes((prevJokes) =>
-      prevJokes.map((joke) =>
-        joke.id === id
-          ? {
-              ...joke,
-              ratings: [...joke.ratings, newRating],
-              averageRating:
-                (joke.ratings.reduce((prev, curr) => prev + curr.rating, 0) + rating) /
-                (joke.ratings.length + 1),
-            }
-          : joke
+    const rateJoke = (id: string, rating: number) => {
+      const newRating = {
+        rating,
+        joke_id: id,
+      }
+
+      setJokes((prevJokes) =>
+        prevJokes.map((joke) =>
+          joke.id === id
+            ? {
+                ...joke,
+                ratings: [...joke.ratings, newRating],
+                averageRating:
+                  (joke.ratings.reduce((prev, curr) => prev + curr.rating, 0) + rating) /
+                  (joke.ratings.length + 1),
+              }
+            : joke
+        )
       )
-    )
 
-    if (!csrfToken) {
-      console.error('Missing CSRF token, rating submission aborted')
-      return
+      if (!csrfToken) {
+        console.error('Missing CSRF token, rating submission aborted')
+        return
+      }
+
+      fetch('/api/rating', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken,
+        },
+        body: JSON.stringify({ joke_id: id, rating: rating }),
+      })
+        .then((response) => {
+          if (!response.ok) throw new Error('Failed to insert rating')
+          console.log('Rating insert successfully!')
+        })
+        .catch((err) => {
+          console.error('Error inserting new rating,', err)
+        })
     }
 
-    fetch('/api/rating', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-CSRF-Token': csrfToken,
-      },
-      body: JSON.stringify({ joke_id: id, rating: rating }),
-    })
-      .then((response) => {
-        if (!response.ok) throw new Error('Failed to insert rating')
-        console.log('Rating insert successfully!')
-      })
-      .catch((err) => {
-        console.error('Error inserting new rating,', err)
-      })
-  }
+    return { jokes, getRandomJoke, rateJoke }
+  }, [jokes, csrfToken]) // Include csrfToken since rateJoke depends on it
 
-  return (
-    <JokeContext.Provider value={{ jokes, getRandomJoke, rateJoke }}>
-      {children}
-    </JokeContext.Provider>
-  )
+  return <JokeContext.Provider value={contextValue}>{children}</JokeContext.Provider>
 }
 
 export function useJokeContext() {
