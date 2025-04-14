@@ -58,20 +58,25 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
         rating,
         joke_id: id,
       }
+      // Update the jokes state with the new rating
+      setJokes((prevJokes) => {
+        return prevJokes.map((joke) => {
+          // Skip jokes that don't match the ID
+          if (joke.id !== id) return joke
 
-      setJokes((prevJokes) =>
-        prevJokes.map((joke) =>
-          joke.id === id
-            ? {
-                ...joke,
-                ratings: [...joke.ratings, newRating],
-                averageRating:
-                  (joke.ratings.reduce((prev, curr) => prev + curr.rating, 0) + rating) /
-                  (joke.ratings.length + 1),
-              }
-            : joke
-        )
-      )
+          // Calculate the new average rating
+          const updatedRatings = [...joke.ratings, newRating]
+          const ratingsTotal = joke.ratings.reduce((sum, r) => sum + r.rating, 0) + rating
+          const newAverageRating = ratingsTotal / updatedRatings.length
+
+          // Return updated joke with new rating
+          return {
+            ...joke,
+            ratings: updatedRatings,
+            averageRating: newAverageRating,
+          }
+        })
+      })
 
       if (!csrfToken) {
         console.error('Missing CSRF token, rating submission aborted')
