@@ -13,7 +13,7 @@ export function useCSRF() {
   return useContext(CSRFContext)
 }
 
-export function CSRFProvider({ children }: { children: React.ReactNode }) {
+export function CSRFProvider({ children }: { readonly children: React.ReactNode }) {
   const [csrfToken, setCsrfToken] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
 
