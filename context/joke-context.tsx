@@ -4,6 +4,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 import type { Joke } from '@/types/joke'
 import { createClient } from '@/lib/supabase/client'
 import { calculateJokeAverageRating } from '@/utils/calculateAverage'
+import { useCSRF } from '@/context/csrf-context'
 
 interface JokeContextType {
   jokes: Joke[]
@@ -15,6 +16,7 @@ const JokeContext = createContext<JokeContextType | undefined>(undefined)
 
 export function JokeProvider({ children }: { readonly children: ReactNode }) {
   const [jokes, setJokes] = useState<Joke[]>([])
+  const { csrfToken } = useCSRF()
 
   useEffect(() => {
     const supabase = createClient()
@@ -66,10 +68,16 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
       )
     )
 
+    if (!csrfToken) {
+      console.error('Missing CSRF token, rating submission aborted')
+      return
+    }
+
     fetch('/api/rating', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'X-CSRF-Token': csrfToken,
       },
       body: JSON.stringify({ joke_id: id, rating: rating }),
     })
