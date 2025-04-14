@@ -54,10 +54,16 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
     }
 
     const rateJoke = (id: string, rating: number) => {
+      if (!csrfToken) {
+        console.error('Missing CSRF token, rating submission aborted')
+        return
+      }
+
       const newRating = {
         rating,
         joke_id: id,
       }
+
       // Update the jokes state with the new rating
       setJokes((prevJokes) => {
         return prevJokes.map((joke) => {
@@ -77,11 +83,6 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
           }
         })
       })
-
-      if (!csrfToken) {
-        console.error('Missing CSRF token, rating submission aborted')
-        return
-      }
 
       fetch('/api/rating', {
         method: 'POST',
