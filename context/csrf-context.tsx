@@ -26,6 +26,13 @@ export function CSRFProvider({ children }: { readonly children: React.ReactNode 
         setLoading(false)
       } catch (error) {
         console.error('Failed to fetch CSRF token:', error)
+        // Retry after a delay if fetch fails
+        const retryTimer = setTimeout(() => {
+          fetchCSRFToken()
+        }, 3000) // Retry after 3 seconds
+
+        // Clean up timer if component unmounts
+        return () => clearTimeout(retryTimer)
         setLoading(false)
       }
     }
