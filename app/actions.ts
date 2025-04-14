@@ -2,6 +2,7 @@
 
 import webpush from 'web-push'
 import { createClient } from '@/lib/supabase/server'
+import { verifyCSRFToken } from '@/utils/csrf'
 
 // Define the custom PushSubscription type expected by web-push
 interface WebPushSubscription {
@@ -23,8 +24,13 @@ webpush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY ?? ''
 )
 
-export async function subscribeUser(sub: WebPushSubscription) {
+export async function subscribeUser(sub: WebPushSubscription, csrfToken: string) {
   try {
+    // Verify CSRF token
+    if (!csrfToken || !verifyCSRFToken(csrfToken)) {
+      return { success: false, error: 'Invalid CSRF token' }
+    }
+
     // Handle the serialized subscription from the client
     const subscription: WebPushSubscription = {
       endpoint: sub.endpoint,
@@ -63,8 +69,13 @@ export async function subscribeUser(sub: WebPushSubscription) {
   }
 }
 
-export async function unsubscribeUser(endpoint: string) {
+export async function unsubscribeUser(endpoint: string, csrfToken: string) {
   try {
+    // Verify CSRF token
+    if (!csrfToken || !verifyCSRFToken(csrfToken)) {
+      return { success: false, error: 'Invalid CSRF token' }
+    }
+
     const supabase = await createClient()
     const { error } = await supabase.from('push_subscriptions').delete().eq('endpoint', endpoint)
 
