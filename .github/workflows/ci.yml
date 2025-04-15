@@ -63,7 +63,7 @@ jobs:
         run: pnpm build
 
       - name: Start Next.js App
-        run: npm run start &
+        run: pnpm start &
         env:
           CI: true
 
