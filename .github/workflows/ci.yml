@@ -79,3 +79,11 @@ jobs:
 
       - name: Run Cypress tests
         run: npx cypress run
+
+      # Upload artifacts on failure
+      - name: Upload Cypress Artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
