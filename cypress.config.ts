@@ -11,7 +11,7 @@ export default defineConfig({
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     async setupNodeEvents(on, config) {},
-    baseUrl: process.env.NEXT_PUBLIC_BASE_URL ?? 'https://daily-joke.vercel.app',
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000',
   },
 
   env: {

@@ -2,7 +2,7 @@ name: CI - Prettier, ESLint, Cypress Test
 
 on:
   push:
-    branches: ['main', 'add_unit_test']
+    branches: ['main', 'run_cypress_at_localhost']
   pull_request:
     branches: ['main']
 
@@ -59,8 +59,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Wait for 2 minutes
-        run: sleep 120s
+      - name: Build Next.js
+        run: pnpm build
+
+      - name: Start Next.js App
+        run: npm run start &
+        env:
+          CI: true
 
       # Cache Cypress binary
       - name: Cache Cypress
