@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   // Determine the expected origin based on Vercel environment variables or fallback
   const expectedOrigin = process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'
+    : (process.env.NEXT_PUBLIC_BASE_URL ?? 'http://localhost:3000')
 
   // Check origin to ensure the request is from the expected origin
   const origin = request.headers.get('origin')
