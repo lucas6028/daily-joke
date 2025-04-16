@@ -32,10 +32,17 @@ export async function POST(request: NextRequest) {
 
   // Check origin to ensure the request is from the expected origin
   const origin = request.headers.get('origin')
-  if (!origin || origin !== expectedOrigin) {
-    // Log details for debugging if needed, but be careful not to expose sensitive info
-    console.warn(`Origin mismatch: received '${origin}', expected '${expectedOrigin}'`)
-    return NextResponse.json({ message: 'Unauthorized request origin' }, { status: 403 })
+  try {
+    const normalizedOrigin = origin ? new URL(origin).origin : null
+    const normalizedExpectedOrigin = expectedOrigin ? new URL(expectedOrigin).origin : null
+    if (!normalizedOrigin || normalizedOrigin !== normalizedExpectedOrigin) {
+      // Log details for debugging if needed, but be careful not to expose sensitive info
+      console.warn(`Origin mismatch: received '${normalizedOrigin}', expected '${normalizedExpectedOrigin}'`)
+      return NextResponse.json({ message: 'Unauthorized request origin' }, { status: 403 })
+    }
+  } catch (err) {
+    console.error('Error while normalizing origins', err)
+    return NextResponse.json({ message: 'Invalid origin header' }, { status: 400 })
   }
 
   // Verify CSRF token
