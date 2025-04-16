@@ -35,10 +35,12 @@ export async function POST(request: NextRequest) {
   try {
     const normalizedOrigin = origin ? new URL(origin).origin : null
     const normalizedExpectedOrigin = expectedOrigin ? new URL(expectedOrigin).origin : null
+    const normalizedBaseUrl = process.env.NEXT_PUBLIC_BASE_URL
+      ? new URL(process.env.NEXT_PUBLIC_BASE_URL).origin
+      : null
     if (
       !normalizedOrigin ||
-      (normalizedOrigin !== normalizedExpectedOrigin &&
-        normalizedOrigin !== process.env.NEXT_PUBLIC_BASE_URL)
+      (normalizedOrigin !== normalizedExpectedOrigin && normalizedOrigin !== normalizedBaseUrl)
     ) {
       console.warn(
         `Origin mismatch: received '${normalizedOrigin}', expected '${normalizedExpectedOrigin}'`
