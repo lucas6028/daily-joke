@@ -25,9 +25,16 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   const supabase = await createClient()
 
-  // Check origin to ensure the request is from the same origin
+  // Determine the expected origin based on Vercel environment variables or fallback
+  const expectedOrigin = process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : process.env.NEXT_PUBLIC_BASE_URL
+
+  // Check origin to ensure the request is from the expected origin
   const origin = request.headers.get('origin')
-  if (!origin?.startsWith(process.env.NEXT_PUBLIC_BASE_URL!)) {
+  if (!origin || origin !== expectedOrigin) {
+    // Log details for debugging if needed, but be careful not to expose sensitive info
+    console.warn(`Origin mismatch: received '${origin}', expected '${expectedOrigin}'`)
     return NextResponse.json({ message: 'Unauthorized request origin' }, { status: 403 })
   }
 
