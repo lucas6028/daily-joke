@@ -1,10 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { verifyCSRFToken } from '@/utils/csrf'
+import { z } from 'zod'
+
+const getRatingParamsSchema = z.object({
+  id: z.preprocess((val) => parseInt(val as string, 10), z.number().int().positive()),
+})
+const postRatingBodySchema = z.object({
+  joke_id: z.number().int().positive(),
+  rating: z.number().int().min(0).max(10),
+})
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const id = parseInt(searchParams.get('id') || '1', 10)
+  // validate query params
+  let params
+  try {
+    params = getRatingParamsSchema.parse({ id: searchParams.get('id') ?? '' })
+  } catch (err) {
+    console.error('Error while validating query params', err)
+    return NextResponse.json({ message: 'Invalid id parameter' }, { status: 400 })
+  }
+  const id = params.id
   const supabase = await createClient()
 
   try {
@@ -63,11 +80,16 @@ export async function POST(request: NextRequest) {
     )
   }
 
-  const { joke_id, rating } = await request.json()
-
-  if (rating < 0 || rating > 10) {
-    return NextResponse.json({ message: 'Invalid rating value' }, { status: 400 })
+  // validate body
+  let data
+  try {
+    const json = await request.json()
+    data = postRatingBodySchema.parse(json)
+  } catch (err) {
+    console.error('Error while validating request body', err)
+    return NextResponse.json({ message: 'Invalid request body' }, { status: 400 })
   }
+  const { joke_id, rating } = data
 
   try {
     const { error } = await supabase.from('ratings').insert({ rating: rating, joke_id: joke_id })

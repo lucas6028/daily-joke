@@ -1,12 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { z } from 'zod'
+
+const getCategoryParamsSchema = z.object({ category: z.string().min(1) })
 
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
-  const category = searchParams.get('category')
-  if (!category) {
-    return NextResponse.json({ message: 'Invalid category' }, { status: 400 })
+  // validate query params
+  let params
+  try {
+    params = getCategoryParamsSchema.parse({ category: searchParams.get('category') ?? '' })
+  } catch (err) {
+    console.error('Error while validating query params', err)
+    return NextResponse.json({ message: 'Invalid category parameter' }, { status: 400 })
   }
+  const category = params.category
   const supabase = await createClient()
 
   try {

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
+import { z } from 'zod'
+
+const revalidatePathSchema = z.object({ path: z.string().min(1).optional() })
 
 export async function GET(request: NextRequest) {
   const authHeader = request.headers.get('authorization')
@@ -9,8 +12,15 @@ export async function GET(request: NextRequest) {
     })
   }
 
-  // Path to revalidate (default to home page '/')
-  const path = request.nextUrl.searchParams.get('path') ?? '/'
+  // validate path param
+  const rawPath = request.nextUrl.searchParams.get('path')
+  let params
+  try {
+    params = revalidatePathSchema.parse({ path: rawPath ?? undefined })
+  } catch {
+    return NextResponse.json({ message: 'Invalid path parameter' }, { status: 400 })
+  }
+  const path = params.path ?? '/'
 
   try {
     await revalidatePath(path)
