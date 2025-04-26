@@ -36,6 +36,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(jokes)
   } catch (err) {
     console.error(`Error while fetching ${category} jokes`, err)
-    return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 401 })
+    return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 })
   }
 }
