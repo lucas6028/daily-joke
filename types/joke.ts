@@ -1,7 +1,7 @@
 import type { Rating } from '@/types/rating'
 
 export interface Joke {
-  id: string
+  id: number
   text: string
   category: string
   ratings: Rating[]
