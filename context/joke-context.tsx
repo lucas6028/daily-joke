@@ -9,7 +9,7 @@ import { useCSRF } from '@/context/csrf-context'
 interface JokeContextType {
   jokes: Joke[]
   getRandomJoke: () => Joke
-  rateJoke: (id: string, rating: number) => void
+  rateJoke: (id: number, rating: number) => void
 }
 
 const JokeContext = createContext<JokeContextType | undefined>(undefined)
@@ -53,7 +53,7 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
       return jokes[randomIndex]
     }
 
-    const rateJoke = (id: string, rating: number) => {
+    const rateJoke = (id: number, rating: number) => {
       if (!csrfToken) {
         console.error('Missing CSRF token, rating submission aborted')
         return
