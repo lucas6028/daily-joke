@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import type { Joke } from '@/types/joke'
 import { createClient } from '@/lib/supabase/server'
 import { z } from 'zod'
 
@@ -20,7 +21,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createClient()
 
   try {
-    const { data: jokes, error } = await supabase
+    const { data: joke, error } = await supabase
       .from('jokes')
       .select(
         `
@@ -32,12 +33,12 @@ export async function GET(request: NextRequest) {
       .limit(1)
       .single()
 
-    if (error) {
+    if (error || !joke) {
       console.error('Error while fetching jokes from supabase', error)
       return NextResponse.json({ message: 'Database error occurred.' }, { status: 500 })
     }
 
-    return NextResponse.json(jokes)
+    return NextResponse.json<Joke>(joke)
   } catch (err) {
     console.error('Error while fetching jokes', err)
     return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 })

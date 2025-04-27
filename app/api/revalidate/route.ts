@@ -18,15 +18,24 @@ export async function GET(request: NextRequest) {
   try {
     params = revalidatePathSchema.parse({ path: rawPath ?? undefined })
   } catch {
-    return NextResponse.json({ message: 'Invalid path parameter' }, { status: 400 })
+    return NextResponse.json<{ message: string }>(
+      { message: 'Invalid path parameter' },
+      { status: 400 }
+    )
   }
   const path = params.path ?? '/'
 
   try {
     await revalidatePath(path)
-    return NextResponse.json({ success: true, message: `Revalidated ${path}` })
+    return NextResponse.json<{ success: boolean; message: string }>({
+      success: true,
+      message: `Revalidated ${path}`,
+    })
   } catch (error) {
     console.error('Error while revalidating page, ', error)
-    return NextResponse.json({ message: 'Revalidate error occurred' }, { status: 500 })
+    return NextResponse.json<{ message: string }>(
+      { message: 'Revalidate error occurred' },
+      { status: 500 }
+    )
   }
 }

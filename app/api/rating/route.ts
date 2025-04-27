@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { verifyCSRFToken } from '@/utils/csrf'
+import type { Rating } from '@/types/rating'
 import { z } from 'zod'
 
 const getRatingParamsSchema = z.object({
@@ -19,7 +20,10 @@ export async function GET(request: NextRequest) {
     params = getRatingParamsSchema.parse({ id: searchParams.get('id') ?? '' })
   } catch (err) {
     console.error('Error while validating query params', err)
-    return NextResponse.json({ message: 'Invalid id parameter' }, { status: 400 })
+    return NextResponse.json<{ message: string }>(
+      { message: 'Invalid id parameter' },
+      { status: 400 }
+    )
   }
   const id = params.id
   const supabase = await createClient()
@@ -29,13 +33,19 @@ export async function GET(request: NextRequest) {
 
     if (error) {
       console.error('Error while fetching jokes from supabase', error)
-      return NextResponse.json({ message: 'Database error occurred' }, { status: 500 })
+      return NextResponse.json<{ message: string }>(
+        { message: 'Database error occurred' },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json(ratings)
+    return NextResponse.json<Rating[]>(ratings)
   } catch (err) {
     console.error('Error while fetching jokes', err)
-    return NextResponse.json({ message: 'Database error occurred.' }, { status: 500 })
+    return NextResponse.json<{ message: string }>(
+      { message: 'Database error occurred.' },
+      { status: 500 }
+    )
   }
 }
 
@@ -62,20 +72,24 @@ export async function POST(request: NextRequest) {
       console.warn(
         `Origin mismatch: received '${normalizedOrigin}', expected '${normalizedExpectedOrigin}'`
       )
-      return NextResponse.json({ message: 'Unauthorized request origin' }, { status: 403 })
+      return NextResponse.json<{ message: string }>(
+        { message: 'Unauthorized request origin' },
+        { status: 403 }
+      )
     }
   } catch (err) {
     console.error('Error while normalizing origins', err)
-    return NextResponse.json({ message: 'Invalid origin header' }, { status: 400 })
+    return NextResponse.json<{ message: string }>(
+      { message: 'Invalid origin header' },
+      { status: 400 }
+    )
   }
 
   // Verify CSRF token
   const csrfToken = request.headers.get('x-csrf-token')
   if (!csrfToken || !verifyCSRFToken(csrfToken)) {
-    return NextResponse.json(
-      {
-        message: !csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token',
-      },
+    return NextResponse.json<{ message: string }>(
+      { message: !csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token' },
       { status: 403 }
     )
   }
@@ -87,7 +101,10 @@ export async function POST(request: NextRequest) {
     data = postRatingBodySchema.parse(json)
   } catch (err) {
     console.error('Error while validating request body', err)
-    return NextResponse.json({ message: 'Invalid request body' }, { status: 400 })
+    return NextResponse.json<{ message: string }>(
+      { message: 'Invalid request body' },
+      { status: 400 }
+    )
   }
   const { joke_id, rating } = data
 
@@ -96,15 +113,21 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error('Error while insert new rating from supabase', error)
-      return NextResponse.json({ message: 'Database error occurred.' }, { status: 500 })
+      return NextResponse.json<{ message: string }>(
+        { message: 'Database error occurred.' },
+        { status: 500 }
+      )
     }
 
-    return NextResponse.json({
-      message: 'Insert new rating successfuuly.',
+    return NextResponse.json<{ message: string; status: number }>({
+      message: 'Insert new rating successfully.',
       status: 200,
     })
   } catch (err) {
     console.error('Error while inserting new rating', err)
-    return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 })
+    return NextResponse.json<{ message: string }>(
+      { message: 'An unexpected error occurred' },
+      { status: 500 }
+    )
   }
 }
