@@ -24,7 +24,8 @@ export async function getJokeById(index: number): Promise<Joke | null> {
       throw new Error(`Failed to fetch joke: ${response.status} ${response.statusText}`)
     }
 
-    return response.json()
+    const data: Joke = await response.json()
+    return data
   } catch (error) {
     if (error instanceof DOMException && error.name === 'AbortError') {
       console.error('Request timed out')
