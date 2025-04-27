@@ -1,6 +1,6 @@
 export interface Rating {
-  id?: string
-  joke_id: string
+  id?: number
+  joke_id: number
   rating: number
   created_at?: string
 }
