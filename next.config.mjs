@@ -1,4 +1,13 @@
-/** @type {import('next').NextConfig} */
+const ContentSecurityPolicy = `
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: https://your-cdn.com;
+  connect-src 'self' https://api.yourservice.com;
+  frame-src https://www.youtube.com;
+`;
+
 const nextConfig = {
   async headers() {
     return [
@@ -21,7 +30,7 @@ const nextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: "frame-ancestors 'none';",
+            value: ContentSecurityPolicy.replace(/\n/g, ''),
           },
           {
             key: "Strict-Transport-Security",
