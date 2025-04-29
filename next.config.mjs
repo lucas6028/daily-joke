@@ -7,6 +7,7 @@ const ContentSecurityPolicy = `
   connect-src 'self';
   frame-src 'none';
   object-src 'none';
+  frame-ancestors 'none';
 `;
 
 const nextConfig = {
