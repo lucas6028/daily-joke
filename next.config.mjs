@@ -1,4 +1,15 @@
-/** @type {import('next').NextConfig} */
+const ContentSecurityPolicy = `
+  default-src 'self';
+  script-src 'self' 'nonce-${process.env.CSP_NONCE}' https://www.googletagmanager.com https://www.google-analytics.com;
+  style-src 'self' 'nonce-${process.env.CSP_NONCE}' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com;
+  img-src 'self' data: https://www.google-analytics.com https://vercel.com https://*.vercel.app;
+  connect-src 'self' https://*.supabase.co https://www.google-analytics.com https://*.vercel.app;
+  frame-src 'none';
+  object-src 'none';
+  frame-ancestors 'none';
+`;
+
 const nextConfig = {
   async headers() {
     return [
@@ -21,7 +32,7 @@ const nextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: "frame-ancestors 'none';",
+            value: ContentSecurityPolicy.replace(/\n/g, '').trim(),
           },
           {
             key: "Strict-Transport-Security",
