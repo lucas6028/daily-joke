@@ -1,11 +1,12 @@
 const ContentSecurityPolicy = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://apis.google.com;
-  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  font-src 'self' https://fonts.gstatic.com;
-  img-src 'self' data: https://your-cdn.com;
-  connect-src 'self' https://api.yourservice.com;
-  frame-src https://www.youtube.com;
+  script-src 'self' 'unsafe-inline' 'unsafe-eval';
+  style-src 'self' 'unsafe-inline';
+  font-src 'self';
+  img-src 'self' data:;
+  connect-src 'self';
+  frame-src 'none';
+  object-src 'none';
 `;
 
 const nextConfig = {
