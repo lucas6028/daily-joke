@@ -6,6 +6,7 @@ import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card'
 import { AlertTriangle, RefreshCw, Home } from 'lucide-react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
+import * as Sentry from '@sentry/nextjs'
 
 export default function ErrorPage({
   error,
@@ -15,7 +16,7 @@ export default function ErrorPage({
   readonly reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
+    Sentry.captureException(error)
     console.error(error)
   }, [error])
 

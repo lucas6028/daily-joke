@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import type { Joke } from '@/types/joke'
 import { createClient } from '@/lib/supabase/server'
+import { captureAPIError } from '@/utils/api-error-handler'
 import { z } from 'zod'
 
 const getSingleJokeParamsSchema = z.object({
@@ -14,8 +15,10 @@ export async function GET(request: NextRequest) {
   try {
     params = getSingleJokeParamsSchema.parse({ id: searchParams.get('id') ?? '' })
   } catch (err) {
-    console.error('Error while validating query params', err)
-    return NextResponse.json({ message: 'Invalid id parameter' }, { status: 400 })
+    return captureAPIError(err, 'Invalid id parameter', 400, {
+      path: request.nextUrl.pathname,
+      params: searchParams.toString(),
+    })
   }
   const id = params.id
   const supabase = await createClient()
@@ -34,13 +37,17 @@ export async function GET(request: NextRequest) {
       .single()
 
     if (error || !joke) {
-      console.error('Error while fetching jokes from supabase', error)
-      return NextResponse.json({ message: 'Database error occurred.' }, { status: 500 })
+      return captureAPIError(error, 'Database error occurred', 500, {
+        path: request.nextUrl.pathname,
+        jokeId: id,
+      })
     }
 
     return NextResponse.json<Joke>(joke)
   } catch (err) {
-    console.error('Error while fetching jokes', err)
-    return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 })
+    return captureAPIError(err, 'An unexpected error occurred', 500, {
+      path: request.nextUrl.pathname,
+      jokeId: id,
+    })
   }
 }

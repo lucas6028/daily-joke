@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { verifyCSRFToken } from '@/utils/csrf'
+import { captureAPIError } from '@/utils/api-error-handler'
 import type { Rating } from '@/types/rating'
 import { z } from 'zod'
 
@@ -19,11 +20,10 @@ export async function GET(request: NextRequest) {
   try {
     params = getRatingParamsSchema.parse({ id: searchParams.get('id') ?? '' })
   } catch (err) {
-    console.error('Error while validating query params', err)
-    return NextResponse.json<{ message: string }>(
-      { message: 'Invalid id parameter' },
-      { status: 400 }
-    )
+    return captureAPIError(err, 'Invalid id parameter', 400, {
+      path: request.nextUrl.pathname,
+      params: searchParams.toString(),
+    })
   }
   const id = params.id
   const supabase = await createClient()
@@ -32,20 +32,18 @@ export async function GET(request: NextRequest) {
     const { data: ratings, error } = await supabase.from('ratings').select('*').eq('joke_id', id)
 
     if (error) {
-      console.error('Error while fetching jokes from supabase', error)
-      return NextResponse.json<{ message: string }>(
-        { message: 'Database error occurred' },
-        { status: 500 }
-      )
+      return captureAPIError(error, 'Database error occurred', 500, {
+        path: request.nextUrl.pathname,
+        jokeId: id,
+      })
     }
 
     return NextResponse.json<Rating[]>(ratings)
   } catch (err) {
-    console.error('Error while fetching jokes', err)
-    return NextResponse.json<{ message: string }>(
-      { message: 'Database error occurred.' },
-      { status: 500 }
-    )
+    return captureAPIError(err, 'Database error occurred', 500, {
+      path: request.nextUrl.pathname,
+      jokeId: id,
+    })
   }
 }
 
@@ -78,19 +76,23 @@ export async function POST(request: NextRequest) {
       )
     }
   } catch (err) {
-    console.error('Error while normalizing origins', err)
-    return NextResponse.json<{ message: string }>(
-      { message: 'Invalid origin header' },
-      { status: 400 }
-    )
+    return captureAPIError(err, 'Invalid origin header', 400, {
+      path: request.nextUrl.pathname,
+      origin,
+    })
   }
 
   // Verify CSRF token
   const csrfToken = request.headers.get('x-csrf-token')
   if (!csrfToken || !verifyCSRFToken(csrfToken)) {
-    return NextResponse.json<{ message: string }>(
-      { message: !csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token' },
-      { status: 403 }
+    return captureAPIError(
+      new Error(!csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token'),
+      !csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token',
+      403,
+      {
+        path: request.nextUrl.pathname,
+        csrfError: !csrfToken ? 'missing' : 'invalid',
+      }
     )
   }
 
@@ -100,11 +102,9 @@ export async function POST(request: NextRequest) {
     const json = await request.json()
     data = postRatingBodySchema.parse(json)
   } catch (err) {
-    console.error('Error while validating request body', err)
-    return NextResponse.json<{ message: string }>(
-      { message: 'Invalid request body' },
-      { status: 400 }
-    )
+    return captureAPIError(err, 'Invalid request body', 400, {
+      path: request.nextUrl.pathname,
+    })
   }
   const { joke_id, rating } = data
 
@@ -112,11 +112,11 @@ export async function POST(request: NextRequest) {
     const { error } = await supabase.from('ratings').insert({ rating: rating, joke_id: joke_id })
 
     if (error) {
-      console.error('Error while insert new rating from supabase', error)
-      return NextResponse.json<{ message: string }>(
-        { message: 'Database error occurred.' },
-        { status: 500 }
-      )
+      return captureAPIError(error, 'Database error occurred', 500, {
+        path: request.nextUrl.pathname,
+        jokeId: joke_id,
+        rating,
+      })
     }
 
     return NextResponse.json<{ message: string; status: number }>({
@@ -124,10 +124,10 @@ export async function POST(request: NextRequest) {
       status: 200,
     })
   } catch (err) {
-    console.error('Error while inserting new rating', err)
-    return NextResponse.json<{ message: string }>(
-      { message: 'An unexpected error occurred' },
-      { status: 500 }
-    )
+    return captureAPIError(err, 'An unexpected error occurred', 500, {
+      path: request.nextUrl.pathname,
+      jokeId: joke_id,
+      rating,
+    })
   }
 }
