@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
+import { captureAPIError } from '@/utils/api-error-handler'
 import { z } from 'zod'
 import type { Joke } from '@/types/joke'
 
@@ -12,8 +13,10 @@ export async function GET(request: NextRequest) {
   try {
     params = getCategoryParamsSchema.parse({ category: searchParams.get('category') ?? '' })
   } catch (err) {
-    console.error('Error while validating query params', err)
-    return NextResponse.json({ message: 'Invalid category parameter' }, { status: 400 })
+    return captureAPIError(err, 'Invalid category parameter', 400, {
+      path: request.nextUrl.pathname,
+      params: searchParams.toString(),
+    })
   }
   const category = params.category
   const supabase = await createClient()
@@ -30,13 +33,17 @@ export async function GET(request: NextRequest) {
       .eq('category', category)
 
     if (error) {
-      console.error(`Error while fetching ${category} jokes from supabase`, error)
-      return NextResponse.json({ message: 'Database error occurred' }, { status: 500 })
+      return captureAPIError(error, 'Database error occurred', 500, {
+        path: request.nextUrl.pathname,
+        category,
+      })
     }
 
     return NextResponse.json<Joke[]>(jokes)
   } catch (err) {
-    console.error(`Error while fetching ${category} jokes`, err)
-    return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 })
+    return captureAPIError(err, 'An unexpected error occurred', 500, {
+      path: request.nextUrl.pathname,
+      category,
+    })
   }
 }

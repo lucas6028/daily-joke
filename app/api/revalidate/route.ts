@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revalidatePath } from 'next/cache'
+import { captureAPIError } from '@/utils/api-error-handler'
 import { z } from 'zod'
 
 const revalidatePathSchema = z.object({ path: z.string().min(1).optional() })
@@ -17,11 +18,11 @@ export async function GET(request: NextRequest) {
   let params
   try {
     params = revalidatePathSchema.parse({ path: rawPath ?? undefined })
-  } catch {
-    return NextResponse.json<{ message: string }>(
-      { message: 'Invalid path parameter' },
-      { status: 400 }
-    )
+  } catch (err) {
+    return captureAPIError(err, 'Invalid path parameter', 400, {
+      path: request.nextUrl.pathname,
+      params: request.nextUrl.searchParams.toString(),
+    })
   }
   const path = params.path ?? '/'
 
@@ -32,10 +33,9 @@ export async function GET(request: NextRequest) {
       message: `Revalidated ${path}`,
     })
   } catch (error) {
-    console.error('Error while revalidating page, ', error)
-    return NextResponse.json<{ message: string }>(
-      { message: 'Revalidate error occurred' },
-      { status: 500 }
-    )
+    return captureAPIError(error, 'Revalidate error occurred', 500, {
+      path: request.nextUrl.pathname,
+      revalidatePath: path,
+    })
   }
 }

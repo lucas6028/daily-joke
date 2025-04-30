@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { generateCSRFToken } from '@/utils/csrf'
+import { captureAPIError } from '@/utils/api-error-handler'
 
 export async function GET() {
   // Generate a new CSRF token and set it as a cookie
@@ -9,7 +10,8 @@ export async function GET() {
     // Return the token to the client
     return NextResponse.json({ csrfToken: token })
   } catch (error) {
-    console.error('Error generating CSRF token:', error)
-    return NextResponse.json({ message: 'Failed to generate CSRF token' }, { status: 500 })
+    return captureAPIError(error, 'Failed to generate CSRF token', 500, {
+      path: '/api/csrf',
+    })
   }
 }
