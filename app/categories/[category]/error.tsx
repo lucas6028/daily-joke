@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { AlertTriangle, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
+import * as Sentry from '@sentry/nextjs'
 
 export default function CategoryError({
   error,
@@ -14,6 +15,7 @@ export default function CategoryError({
   readonly reset: () => void
 }) {
   useEffect(() => {
+    Sentry.captureException(error)
     // Log the error to an error reporting service
     console.error(error)
   }, [error])
