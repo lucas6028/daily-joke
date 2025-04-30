@@ -85,9 +85,14 @@ export async function POST(request: NextRequest) {
   // Verify CSRF token
   const csrfToken = request.headers.get('x-csrf-token')
   if (!csrfToken || !verifyCSRFToken(csrfToken)) {
-    return NextResponse.json<{ message: string }>(
-      { message: !csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token' },
-      { status: 403 }
+    return captureAPIError(
+      new Error(!csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token'),
+      !csrfToken ? 'Missing CSRF token' : 'Invalid CSRF token',
+      403,
+      {
+        path: request.nextUrl.pathname,
+        csrfError: !csrfToken ? 'missing' : 'invalid',
+      }
     )
   }
 
