@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import JokeCard from '@/components/joke-card'
 import JokeCardSkeleton from '@/components/joke-card-skeleton'
@@ -16,7 +16,7 @@ export default function RandomJoke() {
   const fetchedRef = useRef(false)
 
   // Function to fetch a random joke
-  const fetchRandomJoke = async () => {
+  const fetchRandomJoke = useCallback(async () => {
     setIsLoading(true)
     try {
       const joke = await getRandomJoke()
@@ -26,7 +26,7 @@ export default function RandomJoke() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [getRandomJoke])
 
   // Load a random joke when the page loads only once
   useEffect(() => {
@@ -34,7 +34,7 @@ export default function RandomJoke() {
 
     fetchRandomJoke()
     fetchedRef.current = true
-  }, [])
+  }, [fetchRandomJoke])
 
   return (
     <div className="page-transition space-y-10">
