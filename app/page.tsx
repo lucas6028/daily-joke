@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Sparkles, AlertCircle } from 'lucide-react'
 import { getHashIndex } from '@/utils/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
+import JokeCardSkeleton from '@/components/joke-card-skeleton'
 import { useJokeContext } from '@/context/joke-context'
 import { Joke } from '@/types/joke'
 
@@ -71,9 +72,7 @@ export default function Home() {
             <p className="text-muted-foreground mt-2">{errorMessage}</p>
           </div>
         ) : isLoading ? (
-          <div className="p-8 border rounded-lg shadow-sm text-center">
-            <p className="text-muted-foreground">載入中...</p>
-          </div>
+          <JokeCardSkeleton />
         ) : joke ? (
           <JokeCardWrapper joke={joke} />
         ) : (

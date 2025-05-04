@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
+import JokeCardSkeleton from '@/components/joke-card-skeleton'
 import { Joke } from '@/types/joke'
 import { useJokeContext } from '@/context/joke-context'
 
@@ -70,9 +71,7 @@ export default function Single({ params }: { readonly params: { readonly id: str
             <p className="text-muted-foreground mt-2">{errorMessage}</p>
           </div>
         ) : isLoading ? (
-          <div className="p-8 border rounded-lg shadow-sm text-center">
-            <p className="text-muted-foreground">載入中...</p>
-          </div>
+          <JokeCardSkeleton />
         ) : joke ? (
           <JokeCardWrapper joke={joke} />
         ) : (
