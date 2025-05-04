@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import type { Joke } from '@/types/joke'
 import JokeCard from '@/components/joke-card'
@@ -18,6 +18,7 @@ export default function CategoryPage({
   const [categoryJokes, setCategoryJokes] = useState<Joke[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const fetchedRef = useRef(false)
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
@@ -40,25 +41,34 @@ export default function CategoryPage({
     stock: '📉',
   }
 
-  const fetchCategoryJokes = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      const jokes = await getJokesByCategory(params.category)
-      setCategoryJokes(jokes)
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
-      setError(errorMessage)
-      console.error('Error fetching jokes for category:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [getJokesByCategory, params.category])
+  useEffect(() => {
+    // Reset fetched status when category changes
+    fetchedRef.current = false
+  }, [params.category])
 
   useEffect(() => {
+    // Only fetch once for each category
+    if (fetchedRef.current) return
+
+    const fetchCategoryJokes = async () => {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        const jokes = await getJokesByCategory(params.category)
+        setCategoryJokes(jokes)
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+        setError(errorMessage)
+        console.error('Error fetching jokes for category:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     fetchCategoryJokes()
-  }, [fetchCategoryJokes])
+    fetchedRef.current = true
+  }, [getJokesByCategory, params.category])
 
   return (
     <div className="page-transition">

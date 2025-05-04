@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Sparkles, AlertCircle } from 'lucide-react'
 import { getHashIndex } from '@/utils/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
@@ -18,33 +18,38 @@ export default function Home() {
   const [joke, setJoke] = useState<Joke | null>(null)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-
-  const fetchJokeOfTheDay = useCallback(async () => {
-    setIsLoading(true)
-    setErrorMessage(null)
-
-    try {
-      // Get the joke of the day index using the date-based hash function
-      const index = getHashIndex()
-      const fetchedJoke = await getJokeById(index)
-
-      if (!fetchedJoke) {
-        throw new Error(ERROR_MESSAGES.FETCH_FAILED)
-      }
-
-      setJoke(fetchedJoke)
-    } catch (error) {
-      const message = error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN
-      setErrorMessage(message)
-      console.error('Error while fetching joke of the day:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [getJokeById])
+  const fetchedRef = useRef(false)
 
   useEffect(() => {
+    // Only fetch once to prevent infinite loops
+    if (fetchedRef.current) return
+
+    const fetchJokeOfTheDay = async () => {
+      setIsLoading(true)
+      setErrorMessage(null)
+
+      try {
+        // Get the joke of the day index using the date-based hash function
+        const index = getHashIndex()
+        const fetchedJoke = await getJokeById(index)
+
+        if (!fetchedJoke) {
+          throw new Error(ERROR_MESSAGES.FETCH_FAILED)
+        }
+
+        setJoke(fetchedJoke)
+      } catch (error) {
+        const message = error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN
+        setErrorMessage(message)
+        console.error('Error while fetching joke of the day:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     fetchJokeOfTheDay()
-  }, [fetchJokeOfTheDay])
+    fetchedRef.current = true
+  }, [getJokeById])
 
   return (
     <div className="space-y-10">
