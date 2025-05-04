@@ -2,12 +2,12 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useJokeContext } from '@/context/joke-context'
-import JokeCard from '@/components/joke-card'
 import JokeCardSkeleton from '@/components/joke-card-skeleton'
 import { Button } from '@/components/ui/button'
 import { RefreshCw, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
 import type { Joke } from '@/types/joke'
+import JokeCardWrapper from '@/components/joke-card-wrapper'
 
 export default function RandomJoke() {
   const { getRandomJoke, loadingState } = useJokeContext()
@@ -79,7 +79,7 @@ export default function RandomJoke() {
             transition={{ duration: 0.5 }}
             className="mt-6"
           >
-            <JokeCard joke={currentJoke} />
+            <JokeCardWrapper joke={currentJoke} />
           </motion.div>
         )}
       </section>

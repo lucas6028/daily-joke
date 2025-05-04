@@ -3,12 +3,12 @@
 import { useEffect, useState, useRef } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import type { Joke } from '@/types/joke'
-import JokeCard from '@/components/joke-card'
 import JokeCardSkeleton from '@/components/joke-card-skeleton'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
+import JokeCardWrapper from '@/components/joke-card-wrapper'
 
 export default function CategoryPage({
   params,
@@ -123,7 +123,7 @@ export default function CategoryPage({
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
-                <JokeCard joke={joke} />
+                <JokeCardWrapper joke={joke} />
               </motion.div>
             ))
           )}
