@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
@@ -14,6 +14,7 @@ export default function Categories() {
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const fetchedRef = useRef(false)
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
@@ -36,44 +37,48 @@ export default function Categories() {
     stock: '📉',
   }
 
-  const fetchCategories = useCallback(async () => {
-    setIsLoading(true)
-    setError(null)
-
-    try {
-      // Get all categories
-      const allCategories = await getAllCategories()
-      setCategories(allCategories)
-
-      // Calculate counts for each category
-      const counts: Record<string, number> = {}
-
-      // Get joke counts for each category
-      await Promise.all(
-        allCategories.map(async (category) => {
-          try {
-            const jokes = await getJokesByCategory(category)
-            counts[category] = jokes.length
-          } catch (error) {
-            console.error(`Error fetching jokes for category ${category}:`, error)
-            counts[category] = 0
-          }
-        })
-      )
-
-      setCategoryCounts(counts)
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
-      setError(errorMessage)
-      console.error('Error fetching categories:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }, [getAllCategories, getJokesByCategory])
-
   useEffect(() => {
+    // Only fetch once to prevent infinite loops
+    if (fetchedRef.current) return
+
+    const fetchCategories = async () => {
+      setIsLoading(true)
+      setError(null)
+
+      try {
+        // Get all categories
+        const allCategories = await getAllCategories()
+        setCategories(allCategories)
+
+        // Calculate counts for each category
+        const counts: Record<string, number> = {}
+
+        // Get joke counts for each category
+        await Promise.all(
+          allCategories.map(async (category) => {
+            try {
+              const jokes = await getJokesByCategory(category)
+              counts[category] = jokes.length
+            } catch (error) {
+              console.error(`Error fetching jokes for category ${category}:`, error)
+              counts[category] = 0
+            }
+          })
+        )
+
+        setCategoryCounts(counts)
+      } catch (error) {
+        const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+        setError(errorMessage)
+        console.error('Error fetching categories:', error)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
     fetchCategories()
-  }, [fetchCategories])
+    fetchedRef.current = true
+  }, [getAllCategories, getJokesByCategory])
 
   if (isLoading) {
     return (
