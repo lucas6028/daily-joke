@@ -1,12 +1,12 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import type { Joke } from '@/types/joke'
 import JokeCard from '@/components/joke-card'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, AlertCircle } from 'lucide-react'
 import Link from 'next/link'
 
 export default function CategoryPage({
@@ -14,8 +14,10 @@ export default function CategoryPage({
 }: {
   readonly params: { readonly category: string }
 }) {
-  const { jokes } = useJokeContext()
+  const { getJokesByCategory } = useJokeContext()
   const [categoryJokes, setCategoryJokes] = useState<Joke[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
@@ -38,14 +40,25 @@ export default function CategoryPage({
     stock: '📉',
   }
 
-  useEffect(() => {
-    if (jokes.length > 0) {
-      const filtered = jokes.filter(
-        (joke) => joke.category.toLowerCase() === params.category.toLowerCase()
-      )
-      setCategoryJokes(filtered)
+  const fetchCategoryJokes = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      const jokes = await getJokesByCategory(params.category)
+      setCategoryJokes(jokes)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      setError(errorMessage)
+      console.error('Error fetching jokes for category:', error)
+    } finally {
+      setIsLoading(false)
     }
-  }, [jokes, params.category])
+  }, [getJokesByCategory, params.category])
+
+  useEffect(() => {
+    fetchCategoryJokes()
+  }, [fetchCategoryJokes])
 
   return (
     <div className="page-transition">
@@ -68,24 +81,40 @@ export default function CategoryPage({
         </motion.div>
       </div>
 
-      <div className="grid gap-6">
-        {categoryJokes.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-muted-foreground">No jokes found in this category.</p>
-          </div>
-        ) : (
-          categoryJokes.map((joke, index) => (
-            <motion.div
-              key={joke.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.5 }}
-            >
-              <JokeCard joke={joke} />
-            </motion.div>
-          ))
-        )}
-      </div>
+      {isLoading && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">載入中...</p>
+        </div>
+      )}
+
+      {error && (
+        <div className="text-center py-8">
+          <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+          <p className="text-lg font-semibold">Error loading jokes</p>
+          <p className="text-muted-foreground mt-2">{error}</p>
+        </div>
+      )}
+
+      {!isLoading && !error && (
+        <div className="grid gap-6">
+          {categoryJokes.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No jokes found in this category.</p>
+            </div>
+          ) : (
+            categoryJokes.map((joke, index) => (
+              <motion.div
+                key={joke.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1, duration: 0.5 }}
+              >
+                <JokeCard joke={joke} />
+              </motion.div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   )
 }

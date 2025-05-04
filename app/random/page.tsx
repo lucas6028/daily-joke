@@ -1,31 +1,34 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import JokeCard from '@/components/joke-card'
 import { Button } from '@/components/ui/button'
-import { RefreshCw } from 'lucide-react'
+import { RefreshCw, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
+import type { Joke } from '@/types/joke'
 
 export default function RandomJoke() {
-  const getRandomId = (prev: number): number => {
-    if (jokes.length <= 1) return 0
-    const index = Math.floor(Math.random() * (jokes.length - 1))
-    return index >= prev ? index + 1 : index
-  }
-
-  const { jokes } = useJokeContext()
-  const [jokeId, setJokeId] = useState(getRandomId(-1))
+  const { getRandomJoke, loadingState } = useJokeContext()
+  const [currentJoke, setCurrentJoke] = useState<Joke | null>(null)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleGetRandomJoke = () => {
+  const fetchRandomJoke = useCallback(async () => {
     setIsLoading(true)
-    // Simulate loading
-    setTimeout(() => {
-      setJokeId(getRandomId(jokeId))
+    try {
+      const joke = await getRandomJoke()
+      setCurrentJoke(joke)
+    } catch (error) {
+      console.error('Error fetching random joke:', error)
+    } finally {
       setIsLoading(false)
-    }, 500)
-  }
+    }
+  }, [getRandomJoke])
+
+  // Load a random joke when the page loads
+  useEffect(() => {
+    fetchRandomJoke()
+  }, [fetchRandomJoke])
 
   return (
     <div className="page-transition space-y-10">
@@ -38,7 +41,7 @@ export default function RandomJoke() {
         >
           <h1 className="text-3xl font-bold tracking-tight">隨機笑話</h1>
           <p className="text-muted-foreground">點一下按鈕，獲取一個新的隨機笑話！</p>
-          <Button size="lg" onClick={handleGetRandomJoke} disabled={isLoading} className="mx-auto">
+          <Button size="lg" onClick={fetchRandomJoke} disabled={isLoading} className="mx-auto">
             {isLoading ? (
               <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
             ) : (
@@ -48,15 +51,29 @@ export default function RandomJoke() {
           </Button>
         </motion.div>
 
-        {jokes[jokeId] && (
+        {loadingState.error && (
+          <div className="p-8 border rounded-lg shadow-sm text-center mt-6">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <p className="text-lg font-semibold">Error loading joke</p>
+            <p className="text-muted-foreground mt-2">{loadingState.error}</p>
+          </div>
+        )}
+
+        {!loadingState.error && !currentJoke && isLoading && (
+          <div className="p-8 border rounded-lg shadow-sm text-center mt-6">
+            <p className="text-muted-foreground">載入中...</p>
+          </div>
+        )}
+
+        {currentJoke && (
           <motion.div
-            key={jokeId}
+            key={currentJoke.id}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="mt-6"
           >
-            <JokeCard joke={jokes[jokeId]} />
+            <JokeCard joke={currentJoke} />
           </motion.div>
         )}
       </section>
