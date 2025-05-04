@@ -21,7 +21,6 @@ interface JokeContextType {
 
 const JokeContext = createContext<JokeContextType | undefined>(undefined)
 
-// Client-side helper to fetch a joke by ID
 async function fetchJokeById(id: number): Promise<Joke | null> {
   const supabase = createClient()
   const { data, error } = await supabase
@@ -46,7 +45,6 @@ async function fetchJokeById(id: number): Promise<Joke | null> {
   }
 }
 
-// Client-side helper to fetch jokes by category
 async function fetchJokesByCategory(category: string): Promise<Joke[]> {
   const supabase = createClient()
   const { data, error } = await supabase
@@ -70,7 +68,6 @@ async function fetchJokesByCategory(category: string): Promise<Joke[]> {
   }))
 }
 
-// Client-side helper to fetch all joke categories
 async function fetchAllCategories(): Promise<string[]> {
   const supabase = createClient()
   const { data, error } = await supabase.from('jokes').select('category').order('category')
@@ -85,7 +82,6 @@ async function fetchAllCategories(): Promise<string[]> {
   return Array.from(categories)
 }
 
-// Client-side helper to fetch a random joke
 async function fetchRandomJoke(): Promise<Joke | null> {
   const supabase = createClient()
 

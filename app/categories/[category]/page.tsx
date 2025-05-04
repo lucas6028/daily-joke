@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import type { Joke } from '@/types/joke'
 import JokeCard from '@/components/joke-card'
+import JokeCardSkeleton from '@/components/joke-card-skeleton'
 import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, AlertCircle } from 'lucide-react'
@@ -92,8 +93,11 @@ export default function CategoryPage({
       </div>
 
       {isLoading && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">載入中...</p>
+        <div className="grid gap-6">
+          {/* Display 3 skeleton cards while loading */}
+          {[...Array(3)].map((_, i) => (
+            <JokeCardSkeleton key={i} />
+          ))}
         </div>
       )}
 

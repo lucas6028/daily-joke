@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import JokeCard from '@/components/joke-card'
+import JokeCardSkeleton from '@/components/joke-card-skeleton'
 import { Button } from '@/components/ui/button'
 import { RefreshCw, AlertCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
@@ -65,9 +66,9 @@ export default function RandomJoke() {
         )}
 
         {!loadingState.error && !currentJoke && isLoading && (
-          <div className="p-8 border rounded-lg shadow-sm text-center mt-6">
-            <p className="text-muted-foreground">載入中...</p>
-          </div>
+          <motion.div className="mt-6">
+            <JokeCardSkeleton />
+          </motion.div>
         )}
 
         {currentJoke && (
