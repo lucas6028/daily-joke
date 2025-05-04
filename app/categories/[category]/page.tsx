@@ -15,7 +15,7 @@ export default function CategoryPage({
 }: {
   readonly params: { readonly category: string }
 }) {
-  const { getJokesByCategory } = useJokeContext()
+  const { getJokesByCategory, getJokeById } = useJokeContext()
   const [categoryJokes, setCategoryJokes] = useState<Joke[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -71,6 +71,18 @@ export default function CategoryPage({
     fetchedRef.current = true
   }, [getJokesByCategory, params.category])
 
+  // Function to handle when a rating is submitted
+  const handleRatingSubmitted = async (jokeId: number) => {
+    // Fetch the updated joke to get the new average rating
+    const updatedJoke = await getJokeById(jokeId)
+    if (updatedJoke) {
+      // Update the specific joke in the categoryJokes array
+      setCategoryJokes((prevJokes) =>
+        prevJokes.map((joke) => (joke.id === jokeId ? updatedJoke : joke))
+      )
+    }
+  }
+
   return (
     <div className="page-transition">
       <div className="mb-6 flex items-center gap-2">
@@ -118,12 +130,12 @@ export default function CategoryPage({
           ) : (
             categoryJokes.map((joke, index) => (
               <motion.div
-                key={joke.id}
+                key={`joke-${joke.id}-${joke.ratings.length}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1, duration: 0.5 }}
               >
-                <JokeCard joke={joke} />
+                <JokeCard joke={joke} onRatingSubmitted={() => handleRatingSubmitted(joke.id)} />
               </motion.div>
             ))
           )}
