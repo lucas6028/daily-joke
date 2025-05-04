@@ -1,24 +1,19 @@
 'use client'
 
+import { useState, useEffect, useCallback } from 'react'
 import { useJokeContext } from '@/context/joke-context'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, AlertCircle } from 'lucide-react'
 
 export default function Categories() {
-  const { jokes } = useJokeContext()
-
-  // Extract unique categories and count jokes in each
-  const categories = Array.from(new Set(jokes.map((joke) => joke.category)))
-  const categoryCounts = categories.reduce(
-    (acc, category) => {
-      acc[category] = jokes.filter((joke) => joke.category === category).length
-      return acc
-    },
-    {} as Record<string, number>
-  )
+  const { getAllCategories, getJokesByCategory } = useJokeContext()
+  const [categories, setCategories] = useState<string[]>([])
+  const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   // Category icons/emojis
   const categoryEmojis: Record<string, string> = {
@@ -39,6 +34,81 @@ export default function Categories() {
     idiom: '🈸',
     jingle: '🔔',
     stock: '📉',
+  }
+
+  const fetchCategories = useCallback(async () => {
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      // Get all categories
+      const allCategories = await getAllCategories()
+      setCategories(allCategories)
+
+      // Calculate counts for each category
+      const counts: Record<string, number> = {}
+
+      // Get joke counts for each category
+      await Promise.all(
+        allCategories.map(async (category) => {
+          try {
+            const jokes = await getJokesByCategory(category)
+            counts[category] = jokes.length
+          } catch (error) {
+            console.error(`Error fetching jokes for category ${category}:`, error)
+            counts[category] = 0
+          }
+        })
+      )
+
+      setCategoryCounts(counts)
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+      setError(errorMessage)
+      console.error('Error fetching categories:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [getAllCategories, getJokesByCategory])
+
+  useEffect(() => {
+    fetchCategories()
+  }, [fetchCategories])
+
+  if (isLoading) {
+    return (
+      <div className="page-transition">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center space-y-2 mb-8"
+        >
+          <h1 className="text-3xl font-bold tracking-tight">笑話分類</h1>
+          <p className="text-muted-foreground">載入中...</p>
+        </motion.div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="page-transition">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center space-y-2 mb-8"
+        >
+          <h1 className="text-3xl font-bold tracking-tight">笑話分類</h1>
+          <div className="p-8 border rounded-lg shadow-sm text-center mt-6">
+            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+            <p className="text-lg font-semibold">Error loading categories</p>
+            <p className="text-muted-foreground mt-2">{error}</p>
+          </div>
+        </motion.div>
+      </div>
+    )
   }
 
   return (
@@ -71,7 +141,7 @@ export default function Categories() {
                     <div>
                       <h2 className="text-xl font-semibold capitalize">{category}</h2>
                       <Badge variant="secondary" className="mt-1">
-                        {categoryCounts[category]} jokes
+                        {categoryCounts[category] || 0} jokes
                       </Badge>
                     </div>
                   </div>

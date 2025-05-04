@@ -1,8 +1,10 @@
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
 import { AlertCircle } from 'lucide-react'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
 import { Joke } from '@/types/joke'
-import { calculateJokeAverageRating } from '@/utils/calculateAverage'
-import { getJokeById } from '@/lib/getJoke'
+import { useJokeContext } from '@/context/joke-context'
 
 const MAX_JOKE_ID = 75
 const ERROR_MESSAGES = {
@@ -13,35 +15,50 @@ const ERROR_MESSAGES = {
   TITLE: '笑話載入失敗',
 }
 
-export default async function Single({ params }: { readonly params: { readonly id: string } }) {
-  const index = parseInt(params.id)
-  let joke: Joke | null = null
-  let errorMessage = null
+export default function Single({ params }: { readonly params: { readonly id: string } }) {
+  const { getJokeById } = useJokeContext()
+  const [joke, setJoke] = useState<Joke | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-  if (isNaN(index)) {
-    errorMessage = ERROR_MESSAGES.INVALID_ID
-  } else if (index < 1 || index > MAX_JOKE_ID) {
-    errorMessage = ERROR_MESSAGES.OUT_OF_RANGE
-  } else {
+  const fetchJoke = useCallback(async () => {
+    setIsLoading(true)
+    setErrorMessage(null)
+
+    const index = parseInt(params.id)
+
+    if (isNaN(index)) {
+      setErrorMessage(ERROR_MESSAGES.INVALID_ID)
+      setIsLoading(false)
+      return
+    }
+
+    if (index < 1 || index > MAX_JOKE_ID) {
+      setErrorMessage(ERROR_MESSAGES.OUT_OF_RANGE)
+      setIsLoading(false)
+      return
+    }
+
     try {
-      joke = await getJokeById(index)
+      const fetchedJoke = await getJokeById(index)
 
-      if (!joke) {
+      if (!fetchedJoke) {
         throw new Error(ERROR_MESSAGES.FETCH_FAILED)
       }
-    } catch (error) {
-      errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN
-      console.error('Error while fetching jokes:', error)
-    }
-  }
 
-  // Calculate average rating on the server
-  const jokes = joke
-    ? {
-        ...joke,
-        averageRating: calculateJokeAverageRating(joke),
-      }
-    : null
+      setJoke(fetchedJoke)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN
+      setErrorMessage(message)
+      console.error('Error while fetching joke:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [getJokeById, params.id])
+
+  useEffect(() => {
+    fetchJoke()
+  }, [fetchJoke])
 
   return (
     <div className="space-y-10">
@@ -52,11 +69,15 @@ export default async function Single({ params }: { readonly params: { readonly i
             <p className="text-lg font-semibold">{ERROR_MESSAGES.TITLE}</p>
             <p className="text-muted-foreground mt-2">{errorMessage}</p>
           </div>
-        ) : jokes ? (
-          <JokeCardWrapper joke={jokes} />
-        ) : (
+        ) : isLoading ? (
           <div className="p-8 border rounded-lg shadow-sm text-center">
             <p className="text-muted-foreground">載入中...</p>
+          </div>
+        ) : joke ? (
+          <JokeCardWrapper joke={joke} />
+        ) : (
+          <div className="p-8 border rounded-lg shadow-sm text-center">
+            <p className="text-muted-foreground">無法載入笑話</p>
           </div>
         )}
       </section>

@@ -1,9 +1,11 @@
+'use client'
+
+import { useState, useEffect, useCallback } from 'react'
 import { Sparkles, AlertCircle } from 'lucide-react'
 import { getHashIndex } from '@/utils/getHashIndex'
 import JokeCardWrapper from '@/components/joke-card-wrapper'
-import { calculateJokeAverageRating } from '@/utils/calculateAverage'
+import { useJokeContext } from '@/context/joke-context'
 import { Joke } from '@/types/joke'
-import { getJokeById } from '@/lib/getJoke'
 
 const ERROR_MESSAGES = {
   FETCH_FAILED: '無法獲取笑話，請稍後再試',
@@ -11,33 +13,38 @@ const ERROR_MESSAGES = {
   TITLE: '笑話載入失敗',
 }
 
-async function getJoke(): Promise<Joke | null> {
-  const index = getHashIndex()
-  return getJokeById(index)
-}
+export default function Home() {
+  const { getJokeById } = useJokeContext()
+  const [joke, setJoke] = useState<Joke | null>(null)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
 
-export default async function Home() {
-  let joke: Joke | null = null
-  let errorMessage = null
+  const fetchJokeOfTheDay = useCallback(async () => {
+    setIsLoading(true)
+    setErrorMessage(null)
 
-  try {
-    joke = await getJoke()
+    try {
+      // Get the joke of the day index using the date-based hash function
+      const index = getHashIndex()
+      const fetchedJoke = await getJokeById(index)
 
-    if (!joke) {
-      throw new Error(ERROR_MESSAGES.FETCH_FAILED)
-    }
-  } catch (error) {
-    errorMessage = error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN
-    console.error('Error while fetching jokes:', error)
-  }
-
-  // Calculate average rating on the server
-  const jokeOfTheDay = joke
-    ? {
-        ...joke,
-        averageRating: calculateJokeAverageRating(joke),
+      if (!fetchedJoke) {
+        throw new Error(ERROR_MESSAGES.FETCH_FAILED)
       }
-    : null
+
+      setJoke(fetchedJoke)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : ERROR_MESSAGES.UNKNOWN
+      setErrorMessage(message)
+      console.error('Error while fetching joke of the day:', error)
+    } finally {
+      setIsLoading(false)
+    }
+  }, [getJokeById])
+
+  useEffect(() => {
+    fetchJokeOfTheDay()
+  }, [fetchJokeOfTheDay])
 
   return (
     <div className="space-y-10">
@@ -58,11 +65,15 @@ export default async function Home() {
             <p className="text-lg font-semibold">{ERROR_MESSAGES.TITLE}</p>
             <p className="text-muted-foreground mt-2">{errorMessage}</p>
           </div>
-        ) : jokeOfTheDay ? (
-          <JokeCardWrapper joke={jokeOfTheDay} />
-        ) : (
+        ) : isLoading ? (
           <div className="p-8 border rounded-lg shadow-sm text-center">
             <p className="text-muted-foreground">載入中...</p>
+          </div>
+        ) : joke ? (
+          <JokeCardWrapper joke={joke} />
+        ) : (
+          <div className="p-8 border rounded-lg shadow-sm text-center">
+            <p className="text-muted-foreground">無法載入笑話</p>
           </div>
         )}
       </section>
