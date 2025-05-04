@@ -10,7 +10,7 @@ import { motion } from 'framer-motion'
 import type { Joke } from '@/types/joke'
 
 export default function RandomJoke() {
-  const { getRandomJoke, loadingState } = useJokeContext()
+  const { getRandomJoke, getJokeById, loadingState } = useJokeContext()
   const [currentJoke, setCurrentJoke] = useState<Joke | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const fetchedRef = useRef(false)
@@ -35,6 +35,17 @@ export default function RandomJoke() {
     fetchRandomJoke()
     fetchedRef.current = true
   }, [fetchRandomJoke])
+
+  // Function to handle when a rating is submitted
+  const handleRatingSubmitted = async () => {
+    if (currentJoke) {
+      // Fetch the updated joke to get the new average rating
+      const updatedJoke = await getJokeById(currentJoke.id)
+      if (updatedJoke) {
+        setCurrentJoke(updatedJoke)
+      }
+    }
+  }
 
   return (
     <div className="page-transition space-y-10">
@@ -73,13 +84,13 @@ export default function RandomJoke() {
 
         {currentJoke && (
           <motion.div
-            key={currentJoke.id}
+            key={`joke-${currentJoke.id}-${currentJoke.ratings.length}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
             className="mt-6"
           >
-            <JokeCard joke={currentJoke} />
+            <JokeCard joke={currentJoke} onRatingSubmitted={handleRatingSubmitted} />
           </motion.div>
         )}
       </section>
