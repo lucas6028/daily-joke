@@ -33,11 +33,11 @@ export default function JokeCardSkeleton() {
         </CardContent>
         <CardFooter className="flex justify-end gap-2 border-t bg-muted/50 py-3">
           <Button variant="ghost" size="sm" disabled>
-            <Share2 className="h-4 w-4 mr-2 text-muted" />
+            <Share2 className="h-4 w-4 mr-2 text-muted-foreground" />
             Share
           </Button>
           <Button variant="ghost" size="sm" disabled>
-            <Copy className="h-4 w-4 mr-2 text-muted" />
+            <Copy className="h-4 w-4 mr-2 text-muted-foreground" />
             Copy
           </Button>
         </CardFooter>
