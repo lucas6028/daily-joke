@@ -303,7 +303,7 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
           for (const [category, jokes] of Object.entries(prev)) {
             const idx = jokes.findIndex((j) => j.id === id)
             if (idx >= 0) {
-              newCache[category] = [...jokes.slice(0, idx), updatedJoke, ...jokes.slice(idx, 1)]
+              newCache[category] = [...jokes.slice(0, idx), updatedJoke, ...jokes.slice(idx + 1)]
             }
           }
           return newCache
