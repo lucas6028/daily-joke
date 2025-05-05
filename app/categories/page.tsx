@@ -153,7 +153,7 @@ export default function Categories() {
                     <div>
                       <h2 className="text-xl font-semibold capitalize">{category}</h2>
                       <Badge variant="secondary" className="mt-1">
-                        {categoryCounts[category] || 0} jokes
+                        {categoryCounts[category] ?? 0} jokes
                       </Badge>
                     </div>
                   </div>
