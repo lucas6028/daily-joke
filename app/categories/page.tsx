@@ -10,7 +10,7 @@ import { ArrowRight, AlertCircle } from 'lucide-react'
 import CategoryCardSkeleton from '@/components/category-card-skeleton'
 
 export default function Categories() {
-  const { getAllCategories, getJokesByCategory } = useJokeContext()
+  const { getAllCategories, getJokeCountByCategory } = useJokeContext()
   const [categories, setCategories] = useState<string[]>([])
   const [categoryCounts, setCategoryCounts] = useState<Record<string, number>>({})
   const [isLoading, setIsLoading] = useState(true)
@@ -58,8 +58,7 @@ export default function Categories() {
         await Promise.all(
           allCategories.map(async (category) => {
             try {
-              const jokes = await getJokesByCategory(category)
-              counts[category] = jokes.length
+              counts[category] = await getJokeCountByCategory(category)
             } catch (error) {
               console.error(`Error fetching jokes for category ${category}:`, error)
               counts[category] = 0
@@ -79,7 +78,7 @@ export default function Categories() {
 
     fetchCategories()
     fetchedRef.current = true
-  }, [getAllCategories, getJokesByCategory])
+  }, [getAllCategories, getJokeCountByCategory])
 
   if (isLoading) {
     return (
