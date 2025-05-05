@@ -22,6 +22,11 @@ interface JokeContextType {
 const JokeContext = createContext<JokeContextType | undefined>(undefined)
 
 async function fetchJokeById(id: number): Promise<Joke | null> {
+  if (!Number.isInteger(id) || id <= 0) {
+    console.error('Invalid ID supplied to fetchJokeById:', id)
+    return null
+  }
+
   const supabase = createClient()
   const { data, error } = await supabase
     .from('jokes')
