@@ -279,19 +279,15 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
         }))
 
         // Update category caches if they contain this joke
-        Object.keys(categoryJokesCache).forEach((category) => {
-          const categoryJokes = categoryJokesCache[category]
-          const jokeIndex = categoryJokes.findIndex((j) => j.id === id)
-
-          if (jokeIndex >= 0) {
-            const updatedCategoryJokes = [...categoryJokes]
-            updatedCategoryJokes[jokeIndex] = updatedJoke
-
-            setCategoryJokesCache((prev) => ({
-              ...prev,
-              [category]: updatedCategoryJokes,
-            }))
+        setCategoryJokesCache((prev) => {
+          const newCache = { ...prev }
+          for (const [category, jokes] of Object.entries(prev)) {
+            const idx = jokes.findIndex((j) => j.id === id)
+            if (idx >= 0) {
+              newCache[category] = [...jokes.slice(0, idx), updatedJoke, ...jokes.slice(idx, 1)]
+            }
           }
+          return newCache
         })
       }
 
