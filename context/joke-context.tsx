@@ -42,7 +42,7 @@ async function fetchJokeById(id: number): Promise<Joke | null> {
 
   if (error || !data) {
     console.error('Error fetching joke by ID:', error?.message)
-    return null
+    throw new Error('Joke not found')
   }
 
   return {
