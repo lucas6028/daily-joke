@@ -21,8 +21,11 @@ export default function JokeCardSkeleton() {
           </div>
           <div className="flex items-center justify-between mt-6">
             <div className="flex space-x-1">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-6 w-6 rounded-full bg-muted animate-pulse"></div>
+              {[...Array(5)].map((_, i: number) => (
+                <div
+                  key={`skeleton-star-${i}`}
+                  className="h-6 w-6 rounded-full bg-muted animate-pulse"
+                ></div>
               ))}
             </div>
             <div className="h-4 w-32 rounded bg-muted animate-pulse"></div>

@@ -95,8 +95,8 @@ export default function CategoryPage({
       {isLoading && (
         <div className="grid gap-6">
           {/* Display 3 skeleton cards while loading */}
-          {[...Array(3)].map((_, i) => (
-            <JokeCardSkeleton key={i} />
+          {[...Array(3)].map((_, i: number) => (
+            <JokeCardSkeleton key={`skeleton-star-${i}`} />
           ))}
         </div>
       )}
