@@ -101,7 +101,6 @@ async function fetchRandomJoke(): Promise<Joke | null> {
     return null
   }
 
-  // NOSONAR: Randomness is acceptable for joke selection, not a security risk
   const randomIndex = Math.floor(Math.random() * count) + 1
 
   // Fetch a joke at that random position
