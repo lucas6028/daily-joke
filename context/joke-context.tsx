@@ -95,12 +95,19 @@ async function fetchRandomJoke(): Promise<Joke | null> {
     return null
   }
 
+  // Generate a random index
+  const randomIndex = Math.floor(Math.random() * count) + 1
+
   // Fetch a joke at that random position
   const { data, error } = await supabase
     .from('jokes')
-    .select('*, ratings:ratings(*)')
-    .order('random()') // PostgreSQL random order
-    .limit(1)
+    .select(
+      `
+      *,
+      ratings:ratings(*)
+    `
+    )
+    .range(randomIndex - 1, randomIndex - 1)
     .single()
 
   if (error || !data) {
