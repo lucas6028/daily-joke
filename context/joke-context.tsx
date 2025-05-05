@@ -101,7 +101,7 @@ async function fetchRandomJoke(): Promise<Joke | null> {
     return null
   }
 
-  // Generate a random index
+  // NOSONAR – Math.random() here is safe, ignore SonarQube security hotspot
   const randomIndex = Math.floor(Math.random() * count) + 1
 
   // Fetch a joke at that random position
