@@ -96,8 +96,8 @@ export default function Categories() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Display 6 skeleton cards while loading */}
-          {[...Array(6)].map((_, i) => (
-            <CategoryCardSkeleton key={i} />
+          {[...Array(6)].map((_, i: number) => (
+            <CategoryCardSkeleton key={`skeleton-star-${i}`} />
           ))}
         </div>
       </div>
