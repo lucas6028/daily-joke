@@ -26,7 +26,13 @@ export default function Single({ params }: { readonly params: { readonly id: str
     setIsLoading(true)
     setErrorMessage(null)
 
-    const index = parseInt(params.id)
+    const index = Number.parseInt(params.id, 10)
+    // Reject non-integer strings like "12.3" or "1e2"
+    if (!/^\d+$/.test(params.id)) {
+      setErrorMessage(ERROR_MESSAGES.INVALID_ID)
+      setIsLoading(false)
+      return
+    }
 
     if (isNaN(index)) {
       setErrorMessage(ERROR_MESSAGES.INVALID_ID)
