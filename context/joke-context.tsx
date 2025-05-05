@@ -266,7 +266,7 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
         return 0
       }
       setLoading({ isLoading: false, error: null })
-      return count || 0
+      return count ?? 0
     }
 
     const rateJoke = (id: number, rating: number) => {
