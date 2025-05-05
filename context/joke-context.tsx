@@ -101,8 +101,8 @@ async function fetchRandomJoke(): Promise<Joke | null> {
     return null
   }
 
-  // Generate a random index
-  const randomIndex = Math.floor(Math.random() * count) + 1
+  // Generate a random index using secure RNG
+  const randomIndex = (crypto.getRandomValues(new Uint32Array(1))[0] % count) + 1
 
   // Fetch a joke at that random position
   const { data, error } = await supabase
