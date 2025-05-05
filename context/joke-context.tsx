@@ -12,6 +12,7 @@ interface JokeContextType {
   getJokeById: (id: number) => Promise<Joke | null>
   getJokesByCategory: (category: string) => Promise<Joke[]>
   getAllCategories: () => Promise<string[]>
+  getJokeCountByCategory: (category: string) => Promise<number>
   rateJoke: (id: number, rating: number) => void
   loadingState: {
     isLoading: boolean
@@ -253,6 +254,19 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
       }
     }
 
+    async function getJokeCountByCategory(category: string): Promise<number> {
+      const supabase = createClient()
+      const { count, error } = await supabase
+        .from('jokes')
+        .select('*', { count: 'exact', head: true })
+        .eq('category', category)
+      if (error) {
+        console.error('Error fetching joke count by category:', error.message)
+        return 0
+      }
+      return count || 0
+    }
+
     const rateJoke = (id: number, rating: number) => {
       if (!csrfToken) {
         console.error('Missing CSRF token, rating submission aborted')
@@ -320,6 +334,7 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
       getJokeById,
       getJokesByCategory,
       getAllCategories,
+      getJokeCountByCategory,
       rateJoke,
       loadingState: loading,
     }
