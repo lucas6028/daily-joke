@@ -260,11 +260,21 @@ export function JokeProvider({ children }: { readonly children: ReactNode }) {
         .from('jokes')
         .select('*', { count: 'exact', head: true })
         .eq('category', category)
-      if (error) {
-        console.error('Error fetching joke count by category:', error.message)
-        return 0
-      }
-      return count || 0
+async function getJokeCountByCategory(category: string): Promise<number> {
+  setLoading({ isLoading: true, error: null })
+  const supabase = createClient()
+  const { count, error } = await supabase
+    .from('jokes')
+    .select('*', { count: 'exact', head: true })
+    .eq('category', category)
+  if (error) {
+    console.error('Error fetching joke count by category:', error.message)
+    setLoading({ isLoading: false, error: error.message })
+    return 0
+  }
+  setLoading({ isLoading: false, error: null })
+  return count || 0
+}
     }
 
     const rateJoke = (id: number, rating: number) => {
