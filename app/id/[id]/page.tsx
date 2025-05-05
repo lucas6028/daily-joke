@@ -34,12 +34,6 @@ export default function Single({ params }: { readonly params: { readonly id: str
       return
     }
 
-    if (isNaN(index)) {
-      setErrorMessage(ERROR_MESSAGES.INVALID_ID)
-      setIsLoading(false)
-      return
-    }
-
     if (index < 1 || index > MAX_JOKE_ID) {
       setErrorMessage(ERROR_MESSAGES.OUT_OF_RANGE)
       setIsLoading(false)
