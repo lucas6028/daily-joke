@@ -33,10 +33,11 @@ describe('Category navigation test', () => {
   it('should navigate to the correct category', () => {
     cy.visit(Cypress.env('categories'))
     for (const category of categories) {
+      cy.wait(2000)
       cy.contains('h2', category).should('be.visible').click()
       cy.url().should('include', '/' + category)
       cy.get('.joke-card').should('exist').and('be.visible') // Check joke card exist
-      cy.wait(1000) // Allow page to fully load before navigating back
+      cy.wait(2000) // Allow page to fully load before navigating back
       cy.go('back') // Navigate back to test the next category
     }
   })
